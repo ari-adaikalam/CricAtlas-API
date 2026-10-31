@@ -1,0 +1,25 @@
+{% extends "base.txt" %}
+{% block body %}
+{% if state == "failing" %}
+Sending email is not working as it should.
+{% for condition in conditions %}
+  {{ condition }}
+{% endfor %}
+
+  Failed {{ failed }}, unconfirmed {{ unconfirmed }}
+  Circuit breaker {{ breaker }}
+{% if since %}  Since {{ since }}
+{% endif %}
+
+Alert email is held while this lasts. This message is the one notice about it, and a failure to send it is recorded and does not raise another.
+{% else %}
+Sending email works again.
+{% if duration %}It was failing for {{ duration }}.
+{% endif %}
+Anything held in the meantime is sent as one digest.
+{% endif %}
+{% if shrunk %}
+
+Some detail was left out because the message was too long.
+{% endif %}
+{% endblock %}

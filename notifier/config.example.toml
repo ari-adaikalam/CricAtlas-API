@@ -1,0 +1,94 @@
+# Example configuration for the notifier. Placeholders only: copy it outside the repository, fill in
+# real values there, and keep the secret files outside the repository too (mode 0400 or 0600).
+# Every value shown is the default unless it is marked "required". Check a file with:
+#   python -m cricket_notifier check-config --config /etc/cricket-notifier/config.toml
+
+[email]
+recipient = "owner@example.org"                         # required: where every message goes
+sender = "CricAtlas API <alerts@notify.example.org>"      # required: an address on the domain verified in Resend
+subject_prefix = "[CricAtlas API]"
+
+[schedule]
+send_time = "21:00"                                     # the daily summary, local time
+timezone = "Australia/Sydney"                           # an IANA zone name; daylight saving is handled
+grace_minutes = 30                                      # how late a summary may be before it counts as overdue
+catch_up_hours = 48                                     # older missed summaries are recorded as skipped, not sent
+
+[budgets]
+daily_cap = 40                                          # the notifier's own cap, under Resend's 100 a day
+daily_summary_reserve = 3
+daily_last_slots = 2
+monthly_cap = 900                                       # under Resend's 3,000 a month
+monthly_summary_reserve = 40
+monthly_last_slots = 10
+hourly_burst = 6
+account_headroom_daily = 90                             # stop when Resend reports this much account use in a day
+account_headroom_monthly = 2700
+
+[retry]
+max_attempts = 5
+backoff_seconds = [30, 120, 600, 1800]
+timeout_seconds = 10.0
+jitter = 0.2
+
+[deadlines]
+summary_hours = 2.0
+alert_minutes = 30.0
+reminder_hours = 12.0
+
+[breaker]
+failures_to_open = 3
+cooldown_initial_minutes = 30.0
+cooldown_max_hours = 6.0
+queue_max_rows = 200
+
+[storage]
+ledger_path = "/var/lib/cricket-notifier/ledger.sqlite" # required
+volume_mb = 64                                          # the size of the volume the ledger sits on
+max_db_mb = 40
+wal_target_mb = 8
+wal_refuse_mb = 16
+unfinished_payload_mb = 8
+summary_reserve_mb = 2
+finished_payload_days = 30
+finished_payload_mb = 10
+metadata_days = 90
+protected_days = 180
+protected_max_rows = 1000
+free_disk_floor_mb = 2                                  # free space on the ledger's own volume; the three sizes above and this must fit in volume_mb
+prune_at_percent = 80
+
+[webhook]                                               # where Alertmanager posts; bind to an address only it can reach
+bind_host = "127.0.0.1"                                 # an IP address, never a wildcard
+bind_port = 9095
+max_body_kb = 1024
+max_alerts = 100
+requests_per_minute = 120
+
+[metrics]                                               # the notifier's own metrics, for Prometheus
+bind_host = "127.0.0.1"
+bind_port = 9096
+
+[prometheus]
+url = "http://127.0.0.1:9090"
+scrape_interval_seconds = 15.0
+max_boundary_lag_intervals = 2.0
+max_samples = 200000
+timeout_seconds = 20.0
+lookback_hours = 6.0
+api_job = "cricket-api"
+node_job = "node"
+bandwidth_device = "eth0"
+
+[disk]
+path = "/"
+critical_free_percent = 15
+recover_free_percent = 20
+check_seconds = 300
+
+[resend]
+api_base = "https://api.resend.com"
+
+[secrets]                                               # required: files, not values
+resend_api_key_file = "/etc/cricket-notifier/resend_api_key"
+webhook_token_file = "/etc/cricket-notifier/webhook_token"

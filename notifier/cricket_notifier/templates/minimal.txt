@@ -1,0 +1,6 @@
+{% extends "base.txt" %}
+{% block body %}
+The full message was too large to send, so this short one is sent in its place.
+Kind: {{ original_kind }}
+Look at the dashboard for the detail.
+{% endblock %}

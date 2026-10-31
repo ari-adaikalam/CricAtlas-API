@@ -1,0 +1,30 @@
+{
+ "made_on": "2026-10-13",
+ "snapshot_date": "2026-10-10",
+ "full_data_version": "74d7c5b6e654",
+ "fixture_data_version": "56542ec4db88",
+ "matches": {
+  "1152848": "Test, England v Australia, Headingley 2019 (Stokes 135 not out, England won by 1 wicket)",
+  "1528547": "Test, New Zealand v Ireland 2026: Ireland followed on and a declaration, New Zealand won by an innings",
+  "1144530": "ODI, 2019 World Cup final: tied, with a Super Over",
+  "1532481": "ODI, Australia v Bangladesh 2026: result by Duckworth-Lewis, chased",
+  "1521263": "The Hundred, Manchester Super Giants 2026: five-ball sets",
+  "1483765": "Match with ten retirements recorded as retired out",
+  "1552797": "Match with a batter retired hurt",
+  "1030217": "Penalty runs awarded before the innings",
+  "1138202": "Penalty runs awarded after the innings",
+  "64012": "Test with an over of seven balls (miscounted overs)",
+  "1109602": "Test with three innings where a batter was absent hurt",
+  "668511": "ODI whose second batting powerplay starts at an over that has no single delivery (unresolved start)",
+  "1523981": "ODI whose mandatory powerplay ends at a position that matches no delivery (unresolved end)",
+  "1370352": "T20 with four replacements",
+  "296687": "ODI with five notes of missing data",
+  "1543889": "T20 where a substitute fielder who is nothing else took a catch",
+  "995469": "ODI with a run out credited to two fielders",
+  "1394759": "Match where the same fielder id is listed twice on one wicket",
+  "64080": "Test, West Indies v England, Antigua 2004: Lara's 400 not out, a draw",
+  "1278675": "Test, India v New Zealand, Mumbai 2021: Ajaz Patel's 10 wickets in an innings, India won by 372 runs",
+  "1529284": "IPL T20 where an impact player came in by a replacement entry and has no other record in the match",
+  "1298152": "T20 whose over 8 of the first innings holds seven legal balls that nobody listed as miscounted"
+ }
+}

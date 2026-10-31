@@ -1,0 +1,41 @@
+# Alertmanager: groups the alerts and sends each group to the notifier's webhook, which emails it. It sends nothing anywhere else, so there is one receiver.
+#
+# Grouping is by alert name alone, so a thousand failing instances are one message with a fixed identity. The notifier makes its own message key from the group, the alert fingerprints and a
+# 12-hour bucket, which is why repeat_interval is 12 hours: a reminder is at most one message per bucket.
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: notifier
+  group_by: [alertname]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+
+receivers:
+  - name: notifier
+    webhook_configs:
+      # The notifier's container address on the internal `monitor` network (fixed in compose.yaml, and a test checks they agree). Plain HTTP on a network that nothing else is on.
+      - url: http://172.30.20.20:9095/alertmanager
+        send_resolved: true
+        # The notifier accepts 1 to 100 alerts in one webhook.
+        max_alerts: 100
+        timeout: 10s
+        http_config:
+          follow_redirects: false
+          enable_http2: false
+          authorization:
+            type: Bearer
+            credentials_file: /run/secrets/webhook_token
+
+# A higher level of the same condition silences the lower ones, so a disk at 90 percent is one message and not three.
+inhibit_rules:
+  - source_matchers: ['severity="critical"']
+    target_matchers: ['severity=~"high|warning|info"']
+    equal: [family]
+  - source_matchers: ['severity="high"']
+    target_matchers: ['severity=~"warning|info"']
+    equal: [family]
+  - source_matchers: ['severity="warning"']
+    target_matchers: ['severity="info"']
+    equal: [family]

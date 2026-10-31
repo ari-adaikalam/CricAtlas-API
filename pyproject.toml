@@ -1,0 +1,30 @@
+[project]
+name = "cricket-api"
+version = "0.1.0"
+description = "A read-only API over the Cricsheet ball-by-ball data"
+requires-python = ">=3.11"
+dependencies = [
+    "duckdb>=1.1",
+]
+
+[project.optional-dependencies]
+serve = ["fastapi>=0.115", "uvicorn>=0.30"]
+refresh = ["pandas>=2.2", "requests>=2.31"]       # the data refresh in refresh/ (not part of the API image)
+dev = ["pytest>=8", "httpx>=0.27", "fastapi>=0.115", "uvicorn>=0.30"]
+
+[project.scripts]
+cricket-api = "cricket_api.serve:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["cricket_api*"]
+
+[tool.setuptools.package-data]
+"cricket_api.docsite" = ["assets/*.css", "assets/*.svg", "assets/*.png", "assets/*.woff2", "assets/OFL-Outfit.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "refresh"]

@@ -1,0 +1,1 @@
+{{ prefix }} RESOLVED: {{ group_name }}{% if count > 1 %} ({{ count }} alerts){% endif %}

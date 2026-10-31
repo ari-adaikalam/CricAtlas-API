@@ -1,0 +1,13 @@
+[Unit]
+Description=Cricket API soak supervisor (enforces the safety thresholds, stops the traffic at completion, never restarts a finished run)
+After=docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/ubuntu/soak/soak_supervisor.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

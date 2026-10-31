@@ -1,0 +1,7 @@
+*
+!api/cricket_api
+!api/deploy/images/api/requirements.txt
+!api/deploy/images/api/entrypoint.sh
+!api/deploy/images/api/healthcheck.py
+**/__pycache__
+**/*.pyc

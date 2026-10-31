@@ -1,0 +1,1 @@
+{{ prefix }} Disk space {{ "low" if state == "low" else "back to normal" }}

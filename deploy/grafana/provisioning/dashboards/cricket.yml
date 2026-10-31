@@ -1,0 +1,13 @@
+# The dashboard is code: it comes from the file in this repository, cannot be changed in the UI, and cannot be deleted there.
+apiVersion: 1
+providers:
+  - name: cricket
+    orgId: 1
+    folder: Cricket API
+    type: file
+    disableDeletion: true
+    allowUiUpdates: false
+    updateIntervalSeconds: 60
+    options:
+      path: /etc/grafana/dashboards
+      foldersFromFilesStructure: false

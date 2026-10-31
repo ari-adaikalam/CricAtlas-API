@@ -1,0 +1,6 @@
+*
+!api/notifier/cricket_notifier
+!api/deploy/images/notifier/requirements.txt
+!api/deploy/images/notifier/entrypoint.sh
+**/__pycache__
+**/*.pyc

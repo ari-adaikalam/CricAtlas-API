@@ -1,0 +1,401 @@
+# Alerts. Every threshold is provisional until a baseline exists (operations proposal, sections 6 and 9), and every alert has a fixed name with no per-message labels, so a thousand failing routes are one alert.
+# Alertmanager groups by alertname and sends each group to the notifier, which emails it. None of these is "no email lately": the only message expected on an ordinary day is the daily summary.
+# `severity` is critical, high, warning or info. `family` joins the alerts that are one condition at several levels, so the higher level silences the lower ones (alertmanager.yml).
+groups:
+  - name: cricket_api
+    rules:
+      - alert: ApiDown
+        expr: up{job="cricket-api"} == 0
+        for: 2m
+        labels: {severity: critical}
+        annotations:
+          summary: The API has not answered its metrics scrape for 2 minutes
+          description: The API process may be down or hung. UptimeRobot checks it independently from outside.
+      - alert: ApiNotScraped
+        expr: absent(up{job="cricket-api"})
+        for: 5m
+        labels: {severity: critical}
+        annotations:
+          summary: Prometheus has no scrape target for the API
+          description: The API target is missing from the scrape configuration or from service discovery.
+      - alert: Api5xxRateHigh
+        # Business traffic only (the /v1 routes except /v1/meta): the health probe asks about four times a second during a validation run and would dilute the share and the percentile. Liveness has its own alerts.
+        # Server errors the API did not make on purpose. A 503 is also what overload produces (an admission refusal, a busy query slot, a query stopped by the time limit). Each of those is counted by
+        # its own counter and by its own alerts below, and is taken out here, but only out of the 503s: the handled counters can never offset a 500 or any other 5xx. In three windows with real traffic
+        # (the soak, Part A and the ladder) the 503s equalled admission refusals plus query-limit stops exactly, so no 503 is counted twice. A 503 with no counter behind it still counts as unexpected.
+        #   unexpected = (5xx - 503)                              every server error that is not a 503
+        #              + max(0, 503 - handled overload)           a 503 nothing above accounts for
+        expr: |
+          (
+            clamp_min((sum(rate(cricket_api_requests_total{status=~"5..|5xx",route=~"/v1/.+",route!="/v1/meta"}[5m])) or vector(0)) - (sum(rate(cricket_api_requests_total{status="503",route=~"/v1/.+",route!="/v1/meta"}[5m])) or vector(0)), 0)
+            + clamp_min((sum(rate(cricket_api_requests_total{status="503",route=~"/v1/.+",route!="/v1/meta"}[5m])) or vector(0))
+                        - (sum(rate(cricket_api_admission_total{outcome=~"refused_room|refused_wait"}[5m])) or vector(0))
+                        - (sum(rate(cricket_api_query_timeouts_total[5m])) or vector(0))
+                        - (sum(rate(cricket_api_query_busy_total[5m])) or vector(0)), 0)
+          ) / sum(rate(cricket_api_requests_total{route=~"/v1/.+",route!="/v1/meta"}[5m])) > 0.01
+          and sum(rate(cricket_api_requests_total{route=~"/v1/.+",route!="/v1/meta"}[5m])) > 0.05
+        for: 5m
+        labels: {severity: high}
+        annotations:
+          summary: More than 1 percent of requests are unexpected server errors
+          description: Server errors other than overload refusals and query time limit stops, above 1 percent for 5 minutes, with at least about 3 requests a minute. The fault log has the request ids.
+      - alert: ApiLatencyP95High
+        expr: |
+          histogram_quantile(0.95, sum by (le) (rate(cricket_api_request_duration_seconds_bucket{route=~"/v1/.+",route!="/v1/meta"}[5m]))) > 2
+          and sum(rate(cricket_api_requests_total{route=~"/v1/.+",route!="/v1/meta"}[5m])) > 0.05
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: The 95th percentile of business request time is above 2 seconds
+          description: Provisional threshold. The query time limit is 5 seconds.
+      - alert: ApiAdmissionRefusalsSustained
+        expr: |
+          (sum(rate(cricket_api_admission_total{outcome=~"refused_room|refused_wait"}[10m])) or vector(0))
+          + (sum(rate(cricket_api_query_busy_total[10m])) or vector(0)) > 0.1
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: The API has refused requests for lack of room for 10 minutes
+          description: Requests were refused because the admission rooms were full, the wait ran out or every query slot stayed taken. More than one every 10 seconds on average. This is overload, not a fault.
+      - alert: ApiQueryTimeoutsHigh
+        # Both conditions are needed. The frequency floor keeps a quiet API from alerting on one slow query: at 3 requests a minute a single stop would be a third of the traffic. The share keeps a
+        # busy API from alerting on a trickle: 36 stops an hour is nothing at 20 requests a second. The share is of the requests that run long queries (admitted medium and heavy ones), because the
+        # stops are heavy leaderboards in every window measured. Measured, as stops per second and as a share of admitted medium and heavy requests: the 25-hour soak 0.0007 and 0.07 percent,
+        # Part A 0.0005 and 0.15 percent, the capacity ladder 0.037 and 2.2 percent (of heavy requests alone 16 percent, against 0.7 and 1.6 percent). The limits sit between: 0.01 a second
+        # is 14 times the soak and 6 stops in 10 minutes, 1 percent is 7 times the highest quiet share and under half the ladder's.
+        expr: |
+          sum(rate(cricket_api_query_timeouts_total[10m])) > 0.01
+          and sum(rate(cricket_api_query_timeouts_total[10m]))
+              / sum(rate(cricket_api_admission_total{class=~"medium|heavy", outcome="admitted"}[10m])) > 0.01
+          and sum(rate(cricket_api_admission_total{class=~"medium|heavy", outcome="admitted"}[10m])) > 0
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: The API is stopping long queries at the time limit
+          description: At least 6 queries in 10 minutes were stopped by the query time limit, and they were more than 1 percent of the medium and heavy requests run. Provisional thresholds. Heavy leaderboards are the usual cause when the host is busy.
+      - alert: ApiHealthFailing
+        # Liveness is kept apart from the business alerts: a health probe that fails is a fault in itself, whatever the /v1 traffic looks like.
+        expr: sum(rate(cricket_api_requests_total{route="/health",status!~"2.."}[5m])) > 0
+        for: 5m
+        labels: {severity: high}
+        annotations:
+          summary: The health route has been answering with errors
+          description: Probes of /health failed for 5 minutes. The business alerts do not include health requests.
+      - alert: ApiMemoryHigh
+        expr: max(cricket_api_cgroup_memory_bytes) / max(cricket_api_cgroup_memory_limit_bytes) > 0.85
+        for: 10m
+        labels: {severity: high}
+        annotations:
+          summary: The API container uses more than 85 percent of its memory limit
+          description: Container memory includes page cache, which the kernel can reclaim. Compare with the dashboard's resident memory before acting.
+      - alert: ApiOomKilled
+        expr: increase(cricket_api_cgroup_oom_kills_total[10m]) > 0
+        labels: {severity: critical}
+        annotations:
+          summary: A process in the API container was killed for lack of memory
+          description: The container's memory limit was hit.
+      - alert: ApiDataStale
+        expr: time() - max(cricket_api_data_built_timestamp_seconds) > 21 * 86400
+        for: 1h
+        labels: {severity: info}
+        annotations:
+          summary: The data being served was built more than 21 days ago
+          description: The 21 days is provisional until the release cadence is set.
+      - alert: ApiScratchHigh
+        expr: 100 * (1 - node_filesystem_avail_bytes{mountpoint="/srv/cricket/scratch"} / node_filesystem_size_bytes{mountpoint="/srv/cricket/scratch"}) > 70
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: The query scratch volume is more than 70 percent used
+          description: Queries are spilling to disk. The engine refuses a spill at its own cap before the volume is full.
+
+  - name: cricket_host
+    rules:
+      - alert: DiskUsedWarning
+        expr: 100 * (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) > 55
+        for: 10m
+        labels: {severity: warning, family: disk_used}
+        annotations:
+          summary: The host disk is more than 55 percent used
+          description: The disk budget plans for about 42 percent, so something is not bounded.
+      - alert: DiskUsedHigh
+        expr: 100 * (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) > 70
+        for: 10m
+        labels: {severity: high, family: disk_used}
+        annotations:
+          summary: The host disk is more than 70 percent used
+          description: Act this week.
+      - alert: DiskUsedCritical
+        expr: 100 * (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) > 85
+        for: 10m
+        labels: {severity: critical, family: disk_used}
+        annotations:
+          summary: The host disk is more than 85 percent used
+          description: About 6 GB are left. Act now. The notifier also checks free space itself, without Prometheus.
+      - alert: DiskInodesHigh
+        expr: 100 * (1 - node_filesystem_files_free{mountpoint="/"} / node_filesystem_files{mountpoint="/"}) > 80
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: More than 80 percent of the host's inodes are used
+          description: Many small files are being created.
+      # The two forecasts are straight lines through the recent free space, so a refresh run (it uses about 5.3 GiB, then gives it back) bends them. They are therefore asked only while the disk is
+      # past 55 percent used: the budget plans for about 42 percent, and one full run adds about 14 points, so above 55 the usage is not explained by the plan. Below that level the absolute
+      # alerts (DiskUsed*, the notifier's own 15 percent check and the preparer's 8 GiB floor) are the ones that matter. Replayed on the 14 days to 2026-10-28, the old forecasts fired for 2 h and
+      # 14 h on the first refresh day, with at least 18.2 GiB free, and these fire never.
+      - alert: DiskFillsWithin24Hours
+        expr: >-
+          predict_linear(node_filesystem_avail_bytes{mountpoint="/"}[6h], 24 * 3600) < 0
+          and on(mountpoint) 100 * (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) > 55
+        for: 30m
+        labels: {severity: high, family: disk_forecast}
+        annotations:
+          summary: If the last 6 hours' trend continued, the host disk would be full within 24 hours
+          description: >-
+            The disk is past 55 percent used, which the plan and one refresh run do not explain. A build or a cleanup can bend a straight-line forecast, so check the free space and what is growing first.
+      - alert: DiskFillsWithin7Days
+        expr: >-
+          predict_linear(node_filesystem_avail_bytes{mountpoint="/"}[24h], 7 * 24 * 3600) < 0
+          and on(mountpoint) 100 * (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) > 55
+        for: 1h
+        labels: {severity: warning, family: disk_forecast}
+        annotations:
+          summary: If the last 24 hours' trend continued, the host disk would be full within 7 days
+          description: >-
+            The disk is past 55 percent used, which the plan and one refresh run do not explain. A build or a cleanup can bend a straight-line forecast, so check the free space and what is growing first.
+      - alert: DiskComponentOverBudget
+        expr: cricket_disk_component_bytes / cricket_disk_component_budget_bytes > 1
+        for: 1h
+        labels: {severity: warning}
+        annotations:
+          summary: A part of the disk budget is over its size
+          description: The component label on the series says which. Either the budget is wrong or a limit failed.
+      - alert: DiskVolumeNearFull
+        expr: 100 * (1 - node_filesystem_avail_bytes{mountpoint=~"/srv/cricket/(scratch|ledger|prometheus)"} / node_filesystem_size_bytes{mountpoint=~"/srv/cricket/(scratch|ledger|prometheus)"}) > 80
+        for: 10m
+        labels: {severity: high}
+        annotations:
+          summary: A fixed-size volume (scratch, ledger or Prometheus) is more than 80 percent used
+          description: Its owner stops when it is full. The mountpoint label says which.
+      - alert: DiskScanStale
+        expr: time() - max(cricket_disk_scan_timestamp_seconds) > 1800 or absent(cricket_disk_scan_timestamp_seconds)
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: The disk scan has not run for 30 minutes
+          description: The component sizes and the disk panel's budget bars are out of date.
+      - alert: NodeExporterDown
+        expr: up{job="node"} == 0 or absent(up{job="node"})
+        for: 5m
+        labels: {severity: high}
+        annotations:
+          summary: Host metrics are not being collected
+          description: The disk, volume and bandwidth alerts and the summary's host figures depend on node_exporter.
+      - alert: CloudflareRangesChanged
+        expr: max(cricket_cloudflare_ranges_changed) == 1
+        for: 1h
+        labels: {severity: warning}
+        annotations:
+          summary: Cloudflare's published address list differs from the live firewall or the current release
+          description: Review the new list, run api/deploy/local/update_cloudflare_ranges.py and deploy a release, which loads and verifies the firewall. Until then a new range is refused, not trusted.
+      - alert: FirewallNotLoaded
+        expr: min(cricket_firewall_loaded) == 0 or absent(cricket_firewall_loaded)
+        for: 10m
+        labels: {severity: critical}
+        annotations:
+          summary: The host firewall table is not loaded
+          description: Port 443 would be open to everyone. Run host/apply_firewall.sh for the current release.
+      - alert: FirewallStateUnknown
+        expr: min(cricket_firewall_matches_release) < 0 or min(cricket_firewall_persisted_matches_release) < 0 or absent(cricket_firewall_matches_release) or absent(cricket_firewall_persisted_matches_release)
+        for: 15m
+        labels: {severity: high}
+        annotations:
+          summary: The firewall check cannot tell whether the firewall is the current release's
+          description: A list or the firewall could not be read, or the check's output is missing. The firewall may be wrong and nothing says so. Run host/firewall_check.sh by hand.
+      - alert: FirewallDriftsFromRelease
+        expr: min(cricket_firewall_matches_release) == 0
+        for: 20m
+        labels: {severity: high}
+        annotations:
+          summary: The loaded firewall does not hold the current release's Cloudflare ranges
+          description: It was changed by hand or the release's rules were never applied. Run host/apply_firewall.sh for the current release.
+      - alert: FirewallNotPersisted
+        expr: min(cricket_firewall_persisted_matches_release) == 0
+        for: 20m
+        labels: {severity: high}
+        annotations:
+          summary: The firewall a reboot would load is not the current release's
+          description: /etc/nftables.d/cricket.nft differs from the release or does not exist. Run host/apply_firewall.sh for the current release.
+      - alert: FirewallCheckStale
+        expr: time() - max(cricket_firewall_check_timestamp_seconds) > 1800 or absent(cricket_firewall_check_timestamp_seconds)
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: The firewall check has not run for 30 minutes
+          description: The three firewall alerts above cannot fire while it is not running.
+      - alert: CloudflareRangesCheckStale
+        expr: time() - max(cricket_cloudflare_check_timestamp_seconds) > 10 * 86400 or absent(cricket_cloudflare_check_timestamp_seconds)
+        for: 1h
+        labels: {severity: info}
+        annotations:
+          summary: The Cloudflare range check has not run for 10 days
+          description: It runs weekly from a systemd timer on the host.
+
+  - name: cricket_bandwidth
+    rules:
+      - alert: BandwidthMonth50
+        expr: cricket_notifier_bandwidth_month_bytes > 0.5 * 500e9
+        for: 5m
+        labels: {severity: info, family: bandwidth}
+        annotations:
+          summary: Half of the 500 GB monthly traffic allowance is used
+          description: At least this much, from the notifier's hourly record. The count includes SSH, updates and mail calls.
+      - alert: BandwidthMonth80
+        expr: cricket_notifier_bandwidth_month_bytes > 0.8 * 500e9
+        for: 5m
+        labels: {severity: warning, family: bandwidth}
+        annotations:
+          summary: 80 percent of the 500 GB monthly traffic allowance is used
+          description: After the allowance the bandwidth is capped at 10 Mbps. Cache rules are the main lever.
+      - alert: BandwidthMonth95
+        expr: cricket_notifier_bandwidth_month_bytes > 0.95 * 500e9
+        for: 5m
+        labels: {severity: high, family: bandwidth}
+        annotations:
+          summary: 95 percent of the 500 GB monthly traffic allowance is used
+          description: The API will slow, not stop, when the allowance runs out.
+
+  - name: cricket_monitoring
+    rules:
+      - alert: NotifierDown
+        expr: up{job="cricket-notifier"} == 0 or absent(up{job="cricket-notifier"})
+        for: 3m
+        labels: {severity: critical}
+        annotations:
+          summary: The notifier is not running
+          description: No email can be sent until it is back. UptimeRobot's own emails still work.
+      - alert: NotifierStalled
+        expr: time() - max(cricket_notifier_last_tick_timestamp_seconds) > 300
+        for: 2m
+        labels: {severity: high}
+        annotations:
+          summary: The notifier's loop has not completed a pass for 5 minutes
+          description: It is running but not working through its steps.
+      - alert: NotifierSummaryOverdue
+        expr: max(cricket_notifier_summary_overdue_seconds) > 0
+        labels: {severity: high}
+        annotations:
+          summary: A scheduled daily summary is overdue
+          description: Its time passed more than the grace period ago and it has not been accepted by Resend.
+      - alert: NotifierMessagePastDeadline
+        expr: max(cricket_notifier_oldest_overshoot_seconds) > 0
+        labels: {severity: high}
+        annotations:
+          summary: A message is waiting past its deadline
+          description: An alert or summary has not gone out in time.
+      - alert: NotifierFailedOrUnconfirmed
+        expr: max(cricket_notifier_failed_or_unconfirmed) > 0
+        for: 15m
+        labels: {severity: warning}
+        annotations:
+          summary: Messages are failed or unconfirmed and not reviewed
+          description: Run `python -m cricket_notifier status` in the container, then review or resend.
+      - alert: NotifierStorageNearCap
+        expr: max(cricket_notifier_storage_mode{mode!="ok"}) == 1 or max(cricket_notifier_storage_used_bytes) > 0.8 * 40 * 1024 * 1024
+        for: 5m
+        labels: {severity: high}
+        annotations:
+          summary: The notifier's ledger is near its cap or is refusing low-priority writes
+          description: The ledger volume is 64 MB with a 40 MB database cap.
+      - alert: NotifierBreakerOpen
+        expr: max(cricket_notifier_breaker_state{state="open"}) == 1
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: Email sending is failing and alert mail is being held
+          description: The circuit breaker is open. One probe goes out at a time, and a digest follows when it closes.
+      - alert: AlertmanagerDown
+        expr: up{job="alertmanager"} == 0 or absent(up{job="alertmanager"})
+        for: 3m
+        labels: {severity: critical}
+        annotations:
+          summary: Alertmanager is not running
+          description: No alert reaches the notifier until it is back.
+      - alert: PrometheusAlertmanagerUnreachable
+        expr: prometheus_notifications_alertmanagers_discovered < 1
+        for: 5m
+        labels: {severity: critical}
+        annotations:
+          summary: Prometheus cannot find Alertmanager
+          description: Alerts are evaluated but not delivered.
+  - name: cricket_host_memory
+    rules:
+      - alert: HostMemoryAvailableLow
+        # 600 MiB is the stop line of the capacity tests and the validation run. In service it is a warning, because the kernel may still reclaim cache and nothing here refuses traffic at that line.
+        expr: node_memory_MemAvailable_bytes < 600 * 1024 * 1024
+        for: 5m
+        labels: {severity: warning, family: host_memory}
+        annotations:
+          summary: The host has less than 600 MiB of memory available
+          description: Available memory has been under 600 MiB for 5 minutes. Look at the dashboard's per-service memory before acting. Provisional threshold, taken from the test stop line.
+      - alert: HostMemoryPressure
+        # Pressure stall information: the share of time all tasks were stalled waiting for memory. The test stop line is 10 percent for 60 seconds; a sustained quarter of the time is a host that is thrashing.
+        expr: rate(node_pressure_memory_stalled_seconds_total[5m]) > 0.10
+        for: 5m
+        labels: {severity: high, family: host_memory}
+        annotations:
+          summary: Tasks on the host are stalled on memory more than 10 percent of the time
+          description: Memory pressure (full) has been above 10 percent for 5 minutes. The API, the monitoring stack and the system share this host.
+      - alert: PrometheusRuleEvaluationFailing
+        expr: increase(prometheus_rule_evaluation_failures_total[10m]) > 0
+        for: 5m
+        labels: {severity: high}
+        annotations:
+          summary: Prometheus failed to evaluate alert rules
+          description: Some rules are not being evaluated, so their alerts cannot fire. Check Prometheus's logs.
+      - alert: PrometheusSelfScrapeDown
+        expr: up{job="prometheus"} == 0 or absent(up{job="prometheus"})
+        for: 5m
+        labels: {severity: high}
+        annotations:
+          summary: Prometheus cannot scrape itself
+          description: Prometheus's own metrics are missing, which hides its memory, rule and storage health.
+      - alert: HostOomKill
+        # The kernel's own count of processes it killed for memory. It never resets when a container restarts (a container's cgroup counters do), and Prometheus already holds it: the Grafana kill of 2026-10-13
+        # went from 0 to 1 at 16:07:15 UTC. No `for`: one kill is the event. The 30 minute window keeps it firing long enough to be mailed once.
+        expr: increase(node_vmstat_oom_kill[30m]) > 0
+        labels: {severity: high, family: oom}
+        annotations:
+          summary: The kernel killed a process for lack of memory
+          description: Some process or container was OOM killed in the last 30 minutes. The kernel log names it (journalctl -k | grep -i "out of memory"). A container that restarts after a kill shows in ContainerRestarted.
+      - alert: ContainerRestarted
+        # Every scraped service exports its start time, and a restart changes it. A deploy by hand restarts containers too, so this fires once after a release.
+        # The one restart this does not report is the planned one: the data publisher recreates the API once, and its journal then says committed (cricket_data_refresh_publication_committed_seconds, set by the
+        # refresh observer only after the public check passed). It is tolerated only for the API, only for one restart, only for 30 minutes after that record, and only while the API is up. A second
+        # restart, a restart of any other service, a restart with no committed publication and a restart whose API is not up all still fire. A manual deploy, a reboot and an OOM kill are never matched.
+        expr: >-
+          changes(process_start_time_seconds{job!="cricket-api"}[30m]) > 0
+          or
+          changes(process_start_time_seconds{job="cricket-api"}[30m])
+            > on() group_left() (((time() - cricket_data_refresh_publication_committed_seconds < 1800) and on() (up{job="cricket-api"} == 1)) * 0 + 1 or vector(0))
+        # A minute for the observer's record to be scraped after the restart, so the planned one is never mailed in the gap.
+        for: 1m
+        labels: {severity: warning, family: restart}
+        annotations:
+          summary: A service restarted in the last 30 minutes
+          description: The service named by the job label has a new start time, and it is not the one planned API restart of a finished publication. Expected after a manual deploy. Otherwise look for an OOM kill (HostOomKill) or a crash.
+      - alert: GrafanaDown
+        expr: up{job="grafana"} == 0 or absent(up{job="grafana"})
+        for: 5m
+        labels: {severity: high}
+        annotations:
+          summary: Grafana is not answering its metrics scrape
+          description: The dashboards are unavailable. If it restarted after an OOM kill, HostOomKill says so.
+      - alert: GrafanaRssHigh
+        # RSS, not anonymous memory. It includes file pages that the container limit counts differently, and the alert does not claim to measure the memory a kill is about. Observed RSS on the server: 317 to 333 MiB idle, 540 to 556 MiB with the dashboard open. The line is above the highest of those. HostOomKill and ContainerRestarted are the alerts for the events themselves.
+        expr: process_resident_memory_bytes{job="grafana"} > 580 * 1024 * 1024
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: Grafana's resident memory (RSS) has been above 580 MiB for 2 minutes
+          description: This is above the highest RSS seen in normal dashboard use (556 MiB). It flags unusual growth in the process, not an approach to a kill, and it can miss a spike that lasts seconds.

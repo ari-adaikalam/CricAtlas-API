@@ -1,0 +1,4806 @@
+{
+ "/health": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "status": "ok"
+  }
+ },
+ "/v1/meta": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "api_version": "0.1.0",
+    "data_version": "<masked>",
+    "data_built_utc": "<masked>",
+    "snapshot_date": null,
+    "coverage": {
+     "dataset_label": null,
+     "dataset_display_name": "<masked>",
+     "first_match_date": "2020-03-01",
+     "latest_match_date": "2022-01-05",
+     "matches": 3,
+     "balls": 15,
+     "players": 13,
+     "formats": [
+      "ODI",
+      "T20"
+     ],
+     "collections": [
+      "hnd",
+      "ipl",
+      "odis"
+     ],
+     "genders": [
+      "female",
+      "male"
+     ],
+     "seasons": [
+      "2020",
+      "2021",
+      "2022"
+     ]
+    },
+    "features": {
+     "player_profiles": true
+    },
+    "tables": {
+     "balls": {
+      "rows": 15,
+      "columns": [
+       "match_id",
+       "season",
+       "start_date",
+       "innings",
+       "delivery_number",
+       "over",
+       "ball_in_over",
+       "scorecard_ball",
+       "is_legal_delivery",
+       "batting_team",
+       "bowling_team",
+       "striker",
+       "striker_id",
+       "non_striker",
+       "bowler",
+       "bowler_id",
+       "runs_off_bat",
+       "extras",
+       "wides",
+       "noballs",
+       "byes",
+       "legbyes",
+       "penalty",
+       "wicket_type",
+       "player_dismissed",
+       "other_wicket_type",
+       "other_player_dismissed",
+       "wicket",
+       "striker_balls_faced",
+       "total_striker_runs",
+       "player_out_runs",
+       "player_out_balls_faced",
+       "gender",
+       "event",
+       "format",
+       "type",
+       "country_striker",
+       "batting_style_striker",
+       "bowling_style_striker",
+       "playing_role_striker",
+       "striker_age",
+       "country_bowler",
+       "batting_style_bowler",
+       "bowling_style_bowler",
+       "playing_role_bowler",
+       "bowler_age",
+       "fielder_1",
+       "fielder_1_id",
+       "fielder_1_substitute",
+       "non_boundary"
+      ]
+     },
+     "matches": {
+      "rows": 3,
+      "columns": [
+       "match_id",
+       "season",
+       "start_date",
+       "gender",
+       "event",
+       "format",
+       "type",
+       "venue",
+       "match_number",
+       "toss_winner",
+       "toss_decision",
+       "player_of_match",
+       "player_of_match_2",
+       "winner",
+       "winner_runs",
+       "winner_wickets",
+       "outcome",
+       "team_1",
+       "team_2",
+       "city",
+       "end_date",
+       "scheduled_overs",
+       "balls_per_over",
+       "match_type_number",
+       "collection",
+       "result_method",
+       "eliminator",
+       "umpire_1",
+       "umpire_2",
+       "tv_umpire",
+       "match_referee",
+       "won_by_innings",
+       "cricsheet_created",
+       "cricsheet_revision",
+       "cricsheet_data_version",
+       "event_group",
+       "event_sub_name",
+       "event_stage"
+      ]
+     },
+     "players": {
+      "rows": 13,
+      "columns": [
+       "player_id",
+       "name"
+      ]
+     },
+     "player_names": {
+      "rows": 13,
+      "columns": [
+       "player_id",
+       "name",
+       "uses"
+      ]
+     },
+     "wickets": {
+      "rows": 3,
+      "columns": [
+       "match_id",
+       "innings",
+       "delivery_number",
+       "wicket_number",
+       "player_dismissed",
+       "player_dismissed_id",
+       "wicket_type"
+      ]
+     },
+     "wicket_fielders": {
+      "rows": 1,
+      "columns": [
+       "match_id",
+       "innings",
+       "delivery_number",
+       "wicket_number",
+       "fielder_number",
+       "fielder",
+       "fielder_id",
+       "substitute"
+      ]
+     },
+     "match_people": {
+      "rows": 4,
+      "columns": [
+       "match_id",
+       "role",
+       "person_number",
+       "team",
+       "person",
+       "person_id"
+      ]
+     },
+     "innings": {
+      "rows": 4,
+      "columns": [
+       "match_id",
+       "innings",
+       "batting_team",
+       "target_runs",
+       "target_overs",
+       "is_super_over",
+       "declared",
+       "penalty_runs_pre",
+       "penalty_runs_post"
+      ]
+     },
+     "powerplays": {
+      "rows": 1,
+      "columns": [
+       "match_id",
+       "innings",
+       "powerplay_number",
+       "type",
+       "start_over",
+       "start_ball_in_over",
+       "start_delivery_number",
+       "end_over",
+       "end_ball_in_over",
+       "end_delivery_number",
+       "start_listed",
+       "end_listed"
+      ]
+     },
+     "reviews": {
+      "rows": 1,
+      "columns": [
+       "match_id",
+       "innings",
+       "delivery_number",
+       "review_by",
+       "umpire",
+       "umpire_id",
+       "batter",
+       "batter_id",
+       "decision",
+       "review_type",
+       "umpires_call"
+      ]
+     },
+     "match_replacements": {
+      "rows": 1,
+      "columns": [
+       "match_id",
+       "innings",
+       "delivery_number",
+       "replacement_number",
+       "kind",
+       "team",
+       "role",
+       "player_in",
+       "player_in_id",
+       "player_out",
+       "player_out_id",
+       "reason"
+      ]
+     },
+     "match_missing": {
+      "rows": 2,
+      "columns": [
+       "match_id",
+       "missing_number",
+       "missing_type",
+       "innings",
+       "powerplay_type"
+      ]
+     },
+     "miscounted_overs": {
+      "rows": 1,
+      "columns": [
+       "match_id",
+       "innings",
+       "over",
+       "balls",
+       "umpire",
+       "umpire_id"
+      ]
+     },
+     "innings_absent_hurt": {
+      "rows": 2,
+      "columns": [
+       "match_id",
+       "innings",
+       "player",
+       "player_id"
+      ]
+     },
+     "match_dates": {
+      "rows": 2,
+      "columns": [
+       "match_id",
+       "date_number",
+       "date"
+      ]
+     },
+     "player_external_ids": {
+      "rows": 0,
+      "columns": [
+       "player_id",
+       "source",
+       "external_id"
+      ]
+     },
+     "player_batting_innings": {
+      "rows": 7,
+      "columns": [
+       "player_id",
+       "match_id",
+       "innings",
+       "opponent",
+       "runs",
+       "balls",
+       "fours",
+       "sixes",
+       "is_out"
+      ]
+     },
+     "player_bowling_spells": {
+      "rows": 5,
+      "columns": [
+       "player_id",
+       "match_id",
+       "innings",
+       "balls",
+       "runs",
+       "wickets",
+       "wides",
+       "noballs",
+       "maidens"
+      ]
+     },
+     "player_fielding_events": {
+      "rows": 1,
+      "columns": [
+       "player_id",
+       "match_id",
+       "innings",
+       "delivery_number",
+       "wicket_number",
+       "kind"
+      ]
+     },
+     "player_match_involvement": {
+      "rows": 15,
+      "columns": [
+       "player_id",
+       "match_id",
+       "in_squad",
+       "batted",
+       "bowled",
+       "fielded",
+       "fielded_as_substitute",
+       "absent_hurt",
+       "replaced_in",
+       "replaced_out",
+       "super_over",
+       "recorded_on_field",
+       "team"
+      ]
+     },
+     "batter_bowler_innings": {
+      "rows": 7,
+      "columns": [
+       "batter_id",
+       "bowler_id",
+       "match_id",
+       "innings",
+       "deliveries",
+       "balls_faced",
+       "runs",
+       "fours",
+       "sixes",
+       "dismissal_kinds"
+      ]
+     },
+     "match_scorecards": {
+      "rows": 3,
+      "columns": [
+       "match_id",
+       "scorecard"
+      ]
+     }
+    },
+    "source": "Cricsheet",
+    "source_url": "https://cricsheet.org/",
+    "licence": "Open Data Commons Attribution License 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/",
+    "attribution": "Contains data from Cricsheet (https://cricsheet.org/), made available under the Open Data Commons Attribution License 1.0 (ODC-By). You may share and adapt it with attribution."
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/competitions": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "collection": "hnd",
+     "event": "Hundred",
+     "type": "Fran(Hundred)",
+     "format": "T20",
+     "gender": "male",
+     "matches": 1,
+     "first_match": "2022-01-05",
+     "last_match": "2022-01-05"
+    },
+    {
+     "collection": "ipl",
+     "event": "Cup",
+     "type": "Fran(IPL)",
+     "format": "T20",
+     "gender": "male",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01"
+    },
+    {
+     "collection": "odis",
+     "event": "Series",
+     "type": "Intl",
+     "format": "ODI",
+     "gender": "female",
+     "matches": 1,
+     "first_match": "2021-05-10",
+     "last_match": "2021-05-10"
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/competitions?collection=ipl": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "collection": "ipl",
+     "event": "Cup",
+     "type": "Fran(IPL)",
+     "format": "T20",
+     "gender": "male",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01"
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "team": "Beta",
+     "gender": "male",
+     "matches": 2
+    },
+    {
+     "team": "Alpha",
+     "gender": "female",
+     "matches": 1
+    },
+    {
+     "team": "Alpha",
+     "gender": "male",
+     "matches": 1
+    },
+    {
+     "team": "Delta",
+     "gender": "male",
+     "matches": 1
+    },
+    {
+     "team": "Gamma",
+     "gender": "female",
+     "matches": 1
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams?q=alp&collection=ipl&limit=1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "team": "Alpha",
+     "gender": "male",
+     "matches": 1
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/venues": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "venue": "Ground One, Leeds",
+     "matches": 1
+    },
+    {
+     "venue": "Ground Three",
+     "matches": 1
+    },
+    {
+     "venue": "Ground Two",
+     "matches": 1
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/venues?q=ground": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "venue": "Ground One, Leeds",
+     "matches": 1
+    },
+    {
+     "venue": "Ground Three",
+     "matches": 1
+    },
+    {
+     "venue": "Ground Two",
+     "matches": 1
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players?q=one": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "player_id": "a1",
+     "name": "A One"
+    },
+    {
+     "player_id": "b1",
+     "name": "B One"
+    },
+    {
+     "player_id": "d1",
+     "name": "D One"
+    },
+    {
+     "player_id": "f1",
+     "name": "F One"
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players?q=100%25": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "player_id": "x1",
+     "name": "100% Real_Name"
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 3,
+     "season": "2022",
+     "start_date": "2022-01-05",
+     "gender": "male",
+     "event": "Hundred",
+     "format": "T20",
+     "type": "Fran(Hundred)",
+     "venue": "Ground Three",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": null,
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": "no result",
+     "team_1": "Delta",
+     "team_2": "Beta",
+     "city": null,
+     "end_date": "2022-01-05",
+     "scheduled_overs": null,
+     "balls_per_over": 5,
+     "match_type_number": null,
+     "collection": "hnd",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    },
+    {
+     "match_id": 2,
+     "season": "2021",
+     "start_date": "2021-05-10",
+     "gender": "female",
+     "event": "Series",
+     "format": "ODI",
+     "type": "Intl",
+     "venue": "Ground Two",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Gamma",
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "city": null,
+     "end_date": "2021-05-10",
+     "scheduled_overs": 50,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "odis",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    },
+    {
+     "match_id": 1,
+     "season": "2020",
+     "start_date": "2020-03-01",
+     "gender": "male",
+     "event": "Cup",
+     "format": "T20",
+     "type": "Fran(IPL)",
+     "venue": "Ground One, Leeds",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Alpha",
+     "winner_runs": 5,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Alpha",
+     "team_2": "Beta",
+     "city": "Leeds",
+     "end_date": "2020-03-01",
+     "scheduled_overs": 20,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "ipl",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": "2020-04-01",
+     "cricsheet_revision": 2,
+     "cricsheet_data_version": "1.1.0",
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?limit=1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 3,
+     "season": "2022",
+     "start_date": "2022-01-05",
+     "gender": "male",
+     "event": "Hundred",
+     "format": "T20",
+     "type": "Fran(Hundred)",
+     "venue": "Ground Three",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": null,
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": "no result",
+     "team_1": "Delta",
+     "team_2": "Beta",
+     "city": null,
+     "end_date": "2022-01-05",
+     "scheduled_overs": null,
+     "balls_per_over": 5,
+     "match_type_number": null,
+     "collection": "hnd",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": "<masked>",
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?gender=female": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 2,
+     "season": "2021",
+     "start_date": "2021-05-10",
+     "gender": "female",
+     "event": "Series",
+     "format": "ODI",
+     "type": "Intl",
+     "venue": "Ground Two",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Gamma",
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "city": null,
+     "end_date": "2021-05-10",
+     "scheduled_overs": 50,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "odis",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?team=Alpha&date_from=2020-01-01": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 2,
+     "season": "2021",
+     "start_date": "2021-05-10",
+     "gender": "female",
+     "event": "Series",
+     "format": "ODI",
+     "type": "Intl",
+     "venue": "Ground Two",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Gamma",
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "city": null,
+     "end_date": "2021-05-10",
+     "scheduled_overs": 50,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "odis",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    },
+    {
+     "match_id": 1,
+     "season": "2020",
+     "start_date": "2020-03-01",
+     "gender": "male",
+     "event": "Cup",
+     "format": "T20",
+     "type": "Fran(IPL)",
+     "venue": "Ground One, Leeds",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Alpha",
+     "winner_runs": 5,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Alpha",
+     "team_2": "Beta",
+     "city": "Leeds",
+     "end_date": "2020-03-01",
+     "scheduled_overs": 20,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "ipl",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": "2020-04-01",
+     "cricsheet_revision": 2,
+     "cricsheet_data_version": "1.1.0",
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "match_id": 1,
+    "season": "2020",
+    "start_date": "2020-03-01",
+    "gender": "male",
+    "event": "Cup",
+    "format": "T20",
+    "type": "Fran(IPL)",
+    "venue": "Ground One, Leeds",
+    "match_number": null,
+    "toss_winner": null,
+    "toss_decision": null,
+    "player_of_match": null,
+    "player_of_match_2": null,
+    "winner": "Alpha",
+    "winner_runs": 5,
+    "winner_wickets": null,
+    "outcome": null,
+    "team_1": "Alpha",
+    "team_2": "Beta",
+    "city": "Leeds",
+    "end_date": "2020-03-01",
+    "scheduled_overs": 20,
+    "balls_per_over": 6,
+    "match_type_number": null,
+    "collection": "ipl",
+    "result_method": null,
+    "eliminator": null,
+    "umpire_1": null,
+    "umpire_2": null,
+    "tv_umpire": null,
+    "match_referee": null,
+    "won_by_innings": false,
+    "cricsheet_created": "2020-04-01",
+    "cricsheet_revision": 2,
+    "cricsheet_data_version": "1.1.0",
+    "event_group": null,
+    "event_sub_name": null,
+    "event_stage": null,
+    "innings": [
+     {
+      "innings": 1,
+      "batting_team": "Alpha",
+      "target_runs": null,
+      "target_overs": null,
+      "is_super_over": false,
+      "declared": false,
+      "penalty_runs_pre": 5,
+      "penalty_runs_post": 0,
+      "runs": 17,
+      "wickets": 2,
+      "legal_balls": 5,
+      "deliveries": 6,
+      "actual_overs": "0.5",
+      "scorecard_overs": "1.0"
+     },
+     {
+      "innings": 2,
+      "batting_team": "Beta",
+      "target_runs": 20,
+      "target_overs": 20.0,
+      "is_super_over": false,
+      "declared": false,
+      "penalty_runs_pre": 0,
+      "penalty_runs_post": 0,
+      "runs": 1,
+      "wickets": 0,
+      "legal_balls": 2,
+      "deliveries": 2,
+      "actual_overs": "0.2",
+      "scorecard_overs": "0.2"
+     }
+    ],
+    "squads": {
+     "Alpha": [
+      {
+       "player_id": "a1",
+       "name": "A One"
+      },
+      {
+       "player_id": "a2",
+       "name": "A Two"
+      }
+     ],
+     "Beta": [
+      {
+       "player_id": "b1",
+       "name": "B One"
+      }
+     ]
+    },
+    "officials": [
+     {
+      "role": "umpire",
+      "name": "U One",
+      "person_id": "u1"
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/2": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "match_id": 2,
+    "season": "2021",
+    "start_date": "2021-05-10",
+    "gender": "female",
+    "event": "Series",
+    "format": "ODI",
+    "type": "Intl",
+    "venue": "Ground Two",
+    "match_number": null,
+    "toss_winner": null,
+    "toss_decision": null,
+    "player_of_match": null,
+    "player_of_match_2": null,
+    "winner": "Gamma",
+    "winner_runs": null,
+    "winner_wickets": null,
+    "outcome": null,
+    "team_1": "Gamma",
+    "team_2": "Alpha",
+    "city": null,
+    "end_date": "2021-05-10",
+    "scheduled_overs": 50,
+    "balls_per_over": 6,
+    "match_type_number": null,
+    "collection": "odis",
+    "result_method": null,
+    "eliminator": null,
+    "umpire_1": null,
+    "umpire_2": null,
+    "tv_umpire": null,
+    "match_referee": null,
+    "won_by_innings": false,
+    "cricsheet_created": null,
+    "cricsheet_revision": null,
+    "cricsheet_data_version": null,
+    "event_group": null,
+    "event_sub_name": null,
+    "event_stage": null,
+    "innings": [
+     {
+      "innings": 1,
+      "batting_team": "Gamma",
+      "target_runs": null,
+      "target_overs": null,
+      "is_super_over": false,
+      "declared": false,
+      "penalty_runs_pre": 0,
+      "penalty_runs_post": 0,
+      "runs": 2,
+      "wickets": 0,
+      "legal_balls": 1,
+      "deliveries": 1,
+      "actual_overs": "0.1",
+      "scorecard_overs": "0.1"
+     }
+    ],
+    "squads": {},
+    "officials": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/3": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "match_id": 3,
+    "season": "2022",
+    "start_date": "2022-01-05",
+    "gender": "male",
+    "event": "Hundred",
+    "format": "T20",
+    "type": "Fran(Hundred)",
+    "venue": "Ground Three",
+    "match_number": null,
+    "toss_winner": null,
+    "toss_decision": null,
+    "player_of_match": null,
+    "player_of_match_2": null,
+    "winner": null,
+    "winner_runs": null,
+    "winner_wickets": null,
+    "outcome": "no result",
+    "team_1": "Delta",
+    "team_2": "Beta",
+    "city": null,
+    "end_date": "2022-01-05",
+    "scheduled_overs": null,
+    "balls_per_over": 5,
+    "match_type_number": null,
+    "collection": "hnd",
+    "result_method": null,
+    "eliminator": null,
+    "umpire_1": null,
+    "umpire_2": null,
+    "tv_umpire": null,
+    "match_referee": null,
+    "won_by_innings": false,
+    "cricsheet_created": null,
+    "cricsheet_revision": null,
+    "cricsheet_data_version": null,
+    "event_group": null,
+    "event_sub_name": null,
+    "event_stage": null,
+    "innings": [
+     {
+      "innings": 1,
+      "batting_team": "Delta",
+      "target_runs": null,
+      "target_overs": null,
+      "is_super_over": false,
+      "declared": false,
+      "penalty_runs_pre": 0,
+      "penalty_runs_post": 0,
+      "runs": 0,
+      "wickets": 0,
+      "legal_balls": 6,
+      "deliveries": 6,
+      "actual_overs": "1.1",
+      "scorecard_overs": "1.1"
+     }
+    ],
+    "squads": {},
+    "officials": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/scorecard": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "match_id": 1,
+    "balls_per_over": 6,
+    "innings": [
+     {
+      "innings": 1,
+      "batting_team": "Alpha",
+      "bowling_team": "Beta",
+      "is_super_over": false,
+      "declared": false,
+      "total": {
+       "runs": 17,
+       "wickets": 2,
+       "actual_overs": "0.5",
+       "scorecard_overs": "1.0",
+       "legal_balls": 5,
+       "run_rate": 20.4
+      },
+      "extras": {
+       "byes": 0,
+       "legbyes": 1,
+       "wides": 1,
+       "noballs": 0,
+       "penalty": 5,
+       "total": 7
+      },
+      "batting": [
+       {
+        "order": 1,
+        "player": "A One",
+        "player_id": "a1",
+        "runs": 4,
+        "balls": 2,
+        "fours": 1,
+        "sixes": 0,
+        "strike_rate": 200.0,
+        "dismissal": null
+       },
+       {
+        "order": 2,
+        "player": "A Two",
+        "player_id": "a2",
+        "runs": 0,
+        "balls": 1,
+        "fours": 0,
+        "sixes": 0,
+        "strike_rate": 0.0,
+        "dismissal": {
+         "kind": "bowled",
+         "bowler": "B One",
+         "bowler_id": "b1",
+         "fielders": [],
+         "text": "b B One"
+        }
+       },
+       {
+        "order": 3,
+        "player": "A Three",
+        "player_id": "a3",
+        "runs": 6,
+        "balls": 2,
+        "fours": 0,
+        "sixes": 1,
+        "strike_rate": 300.0,
+        "dismissal": {
+         "kind": "caught",
+         "bowler": "B Two",
+         "bowler_id": "b2",
+         "fielders": [
+          "F One"
+         ],
+         "text": "c F One b B Two"
+        }
+       },
+       {
+        "order": 4,
+        "player": "A Four",
+        "player_id": null,
+        "runs": 0,
+        "balls": 0,
+        "fours": 0,
+        "sixes": 0,
+        "strike_rate": null,
+        "dismissal": null
+       }
+      ],
+      "did_not_bat": [],
+      "absent_hurt": [],
+      "fall_of_wickets": [
+       {
+        "wicket": 1,
+        "score": 10,
+        "player": "A Two",
+        "ball": 0.3
+       },
+       {
+        "wicket": 2,
+        "score": 16,
+        "player": "A Three",
+        "ball": 0.5
+       }
+      ],
+      "bowling": [
+       {
+        "order": 1,
+        "bowler": "B One",
+        "player_id": "b1",
+        "actual_overs": "0.3",
+        "scorecard_overs": null,
+        "maidens": 0,
+        "runs": 5,
+        "wickets": 1,
+        "wides": 1,
+        "noballs": 0,
+        "economy": 10.0
+       },
+       {
+        "order": 2,
+        "bowler": "B Two",
+        "player_id": "b2",
+        "actual_overs": "0.2",
+        "scorecard_overs": null,
+        "maidens": 0,
+        "runs": 6,
+        "wickets": 1,
+        "wides": 0,
+        "noballs": 0,
+        "economy": 18.0
+       }
+      ]
+     },
+     {
+      "innings": 2,
+      "batting_team": "Beta",
+      "bowling_team": "Alpha",
+      "is_super_over": false,
+      "declared": false,
+      "total": {
+       "runs": 1,
+       "wickets": 0,
+       "actual_overs": "0.2",
+       "scorecard_overs": "0.2",
+       "legal_balls": 2,
+       "run_rate": 3.0
+      },
+      "extras": {
+       "byes": 0,
+       "legbyes": 0,
+       "wides": 0,
+       "noballs": 0,
+       "penalty": 0,
+       "total": 0
+      },
+      "batting": [
+       {
+        "order": 1,
+        "player": "B Three",
+        "player_id": "b3",
+        "runs": 1,
+        "balls": 1,
+        "fours": 0,
+        "sixes": 0,
+        "strike_rate": 100.0,
+        "dismissal": null
+       },
+       {
+        "order": 2,
+        "player": "B Four",
+        "player_id": "b4",
+        "runs": 0,
+        "balls": 1,
+        "fours": 0,
+        "sixes": 0,
+        "strike_rate": 0.0,
+        "dismissal": {
+         "kind": "retired hurt",
+         "bowler": null,
+         "bowler_id": null,
+         "fielders": [],
+         "text": "retired hurt"
+        }
+       }
+      ],
+      "did_not_bat": [
+       {
+        "player": "B One",
+        "player_id": "b1"
+       }
+      ],
+      "absent_hurt": [
+       {
+        "player": "B Five",
+        "player_id": "b5"
+       }
+      ],
+      "fall_of_wickets": [],
+      "bowling": [
+       {
+        "order": 1,
+        "bowler": "A Five",
+        "player_id": "a5",
+        "actual_overs": "0.2",
+        "scorecard_overs": "0.2",
+        "maidens": 0,
+        "runs": 1,
+        "wickets": 0,
+        "wides": 0,
+        "noballs": 0,
+        "economy": 3.0
+       }
+      ]
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/3/scorecard": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "match_id": 3,
+    "balls_per_over": 5,
+    "innings": [
+     {
+      "innings": 1,
+      "batting_team": "Delta",
+      "bowling_team": "Beta",
+      "is_super_over": false,
+      "declared": false,
+      "total": {
+       "runs": 0,
+       "wickets": 0,
+       "actual_overs": "1.1",
+       "scorecard_overs": "1.1",
+       "legal_balls": 6,
+       "run_rate": 0.0
+      },
+      "extras": {
+       "byes": 0,
+       "legbyes": 0,
+       "wides": 0,
+       "noballs": 0,
+       "penalty": 0,
+       "total": 0
+      },
+      "batting": [
+       {
+        "order": 1,
+        "player": "D One",
+        "player_id": "d1",
+        "runs": 0,
+        "balls": 6,
+        "fours": 0,
+        "sixes": 0,
+        "strike_rate": 0.0,
+        "dismissal": null
+       },
+       {
+        "order": 2,
+        "player": "A Two",
+        "player_id": null,
+        "runs": 0,
+        "balls": 0,
+        "fours": 0,
+        "sixes": 0,
+        "strike_rate": null,
+        "dismissal": null
+       }
+      ],
+      "did_not_bat": [],
+      "absent_hurt": [],
+      "fall_of_wickets": [],
+      "bowling": [
+       {
+        "order": 1,
+        "bowler": "B One",
+        "player_id": "b1",
+        "actual_overs": "1.1",
+        "scorecard_overs": "1.1",
+        "maidens": 1,
+        "runs": 0,
+        "wickets": 0,
+        "wides": 0,
+        "noballs": 0,
+        "economy": 0.0
+       }
+      ]
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/innings/1/balls": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "innings": 1,
+     "delivery_number": 1,
+     "over": 0,
+     "ball_in_over": 1,
+     "scorecard_ball": 0.1,
+     "is_legal_delivery": true,
+     "batting_team": "Alpha",
+     "bowling_team": "Beta",
+     "striker": "A One",
+     "striker_id": "a1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 4,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 2,
+     "over": 0,
+     "ball_in_over": 2,
+     "scorecard_ball": 0.2,
+     "is_legal_delivery": false,
+     "batting_team": "Alpha",
+     "bowling_team": "Beta",
+     "striker": "A One",
+     "striker_id": "a1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 1,
+     "wides": 1,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 3,
+     "over": 0,
+     "ball_in_over": 3,
+     "scorecard_ball": 0.3,
+     "is_legal_delivery": true,
+     "batting_team": "Alpha",
+     "bowling_team": "Beta",
+     "striker": "A Two",
+     "striker_id": "a2",
+     "non_striker": "A One",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 1,
+     "wicket_type": "bowled",
+     "player_dismissed": "A Two",
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 4,
+     "over": 0,
+     "ball_in_over": 4,
+     "scorecard_ball": 0.4,
+     "is_legal_delivery": true,
+     "batting_team": "Alpha",
+     "bowling_team": "Beta",
+     "striker": "A Three",
+     "striker_id": "a3",
+     "non_striker": "A One",
+     "bowler": "B Two",
+     "bowler_id": "b2",
+     "runs_off_bat": 6,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 5,
+     "over": 0,
+     "ball_in_over": 5,
+     "scorecard_ball": 0.5,
+     "is_legal_delivery": true,
+     "batting_team": "Alpha",
+     "bowling_team": "Beta",
+     "striker": "A Three",
+     "striker_id": "a3",
+     "non_striker": "A One",
+     "bowler": "B Two",
+     "bowler_id": "b2",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 1,
+     "wicket_type": "caught",
+     "player_dismissed": "A Three",
+     "fielder_1": "F One"
+    },
+    {
+     "innings": 1,
+     "delivery_number": 6,
+     "over": 0,
+     "ball_in_over": 6,
+     "scorecard_ball": 0.6,
+     "is_legal_delivery": true,
+     "batting_team": "Alpha",
+     "bowling_team": "Beta",
+     "striker": "A One",
+     "striker_id": "a1",
+     "non_striker": "A Four",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 1,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": 1,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/innings/1/balls?limit=2": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "innings": 1,
+     "delivery_number": 1,
+     "over": 0,
+     "ball_in_over": 1,
+     "scorecard_ball": 0.1,
+     "is_legal_delivery": true,
+     "batting_team": "Alpha",
+     "bowling_team": "Beta",
+     "striker": "A One",
+     "striker_id": "a1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 4,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 2,
+     "over": 0,
+     "ball_in_over": 2,
+     "scorecard_ball": 0.2,
+     "is_legal_delivery": false,
+     "batting_team": "Alpha",
+     "bowling_team": "Beta",
+     "striker": "A One",
+     "striker_id": "a1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 1,
+     "wides": 1,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    }
+   ],
+   "next_cursor": "<masked>",
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/innings/1/balls?fields=striker,runs_off_bat,wicket_type": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "delivery_number": 1,
+     "striker": "A One",
+     "runs_off_bat": 4,
+     "wicket_type": null
+    },
+    {
+     "delivery_number": 2,
+     "striker": "A One",
+     "runs_off_bat": 0,
+     "wicket_type": null
+    },
+    {
+     "delivery_number": 3,
+     "striker": "A Two",
+     "runs_off_bat": 0,
+     "wicket_type": "bowled"
+    },
+    {
+     "delivery_number": 4,
+     "striker": "A Three",
+     "runs_off_bat": 6,
+     "wicket_type": null
+    },
+    {
+     "delivery_number": 5,
+     "striker": "A Three",
+     "runs_off_bat": 0,
+     "wicket_type": "caught"
+    },
+    {
+     "delivery_number": 6,
+     "striker": "A One",
+     "runs_off_bat": 0,
+     "wicket_type": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/innings/2/balls": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "innings": 2,
+     "delivery_number": 1,
+     "over": 0,
+     "ball_in_over": 1,
+     "scorecard_ball": 0.1,
+     "is_legal_delivery": true,
+     "batting_team": "Beta",
+     "bowling_team": "Alpha",
+     "striker": "B Three",
+     "striker_id": "b3",
+     "non_striker": "B Four",
+     "bowler": "A Five",
+     "bowler_id": "a5",
+     "runs_off_bat": 1,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 2,
+     "delivery_number": 2,
+     "over": 0,
+     "ball_in_over": 2,
+     "scorecard_ball": 0.2,
+     "is_legal_delivery": true,
+     "batting_team": "Beta",
+     "bowling_team": "Alpha",
+     "striker": "B Four",
+     "striker_id": "b4",
+     "non_striker": "B Three",
+     "bowler": "A Five",
+     "bowler_id": "a5",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 1,
+     "wicket_type": "retired hurt",
+     "player_dismissed": "B Four",
+     "fielder_1": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/3/innings/1/balls?limit=10": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "innings": 1,
+     "delivery_number": 1,
+     "over": 0,
+     "ball_in_over": 1,
+     "scorecard_ball": 0.1,
+     "is_legal_delivery": true,
+     "batting_team": "Delta",
+     "bowling_team": "Beta",
+     "striker": "D One",
+     "striker_id": "d1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 2,
+     "over": 0,
+     "ball_in_over": 2,
+     "scorecard_ball": 0.2,
+     "is_legal_delivery": true,
+     "batting_team": "Delta",
+     "bowling_team": "Beta",
+     "striker": "D One",
+     "striker_id": "d1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 3,
+     "over": 0,
+     "ball_in_over": 3,
+     "scorecard_ball": 0.3,
+     "is_legal_delivery": true,
+     "batting_team": "Delta",
+     "bowling_team": "Beta",
+     "striker": "D One",
+     "striker_id": "d1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 4,
+     "over": 0,
+     "ball_in_over": 4,
+     "scorecard_ball": 0.4,
+     "is_legal_delivery": true,
+     "batting_team": "Delta",
+     "bowling_team": "Beta",
+     "striker": "D One",
+     "striker_id": "d1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 5,
+     "over": 0,
+     "ball_in_over": 5,
+     "scorecard_ball": 0.5,
+     "is_legal_delivery": true,
+     "batting_team": "Delta",
+     "bowling_team": "Beta",
+     "striker": "D One",
+     "striker_id": "d1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    },
+    {
+     "innings": 1,
+     "delivery_number": 6,
+     "over": 1,
+     "ball_in_over": 1,
+     "scorecard_ball": 1.1,
+     "is_legal_delivery": true,
+     "batting_team": "Delta",
+     "bowling_team": "Beta",
+     "striker": "D One",
+     "striker_id": "d1",
+     "non_striker": "A Two",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "runs_off_bat": 0,
+     "extras": 0,
+     "wides": null,
+     "noballs": null,
+     "byes": null,
+     "legbyes": null,
+     "penalty": null,
+     "non_boundary": false,
+     "wicket": 0,
+     "wicket_type": null,
+     "player_dismissed": null,
+     "fielder_1": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/powerplays": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "innings": 1,
+     "powerplay_number": 1,
+     "type": "mandatory",
+     "start": {
+      "over": 0,
+      "ball_in_over": 1,
+      "delivery_number": 1,
+      "listed": "0.1"
+     },
+     "end": {
+      "over": 0,
+      "ball_in_over": 6,
+      "delivery_number": 6,
+      "listed": "0.6"
+     }
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/reviews": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "review_number": 1,
+     "innings": 1,
+     "delivery_number": 3,
+     "over": 0,
+     "ball_in_over": 3,
+     "review_by": "Beta",
+     "umpire": "U One",
+     "umpire_id": "u1",
+     "batter": "A Two",
+     "batter_id": "a2",
+     "decision": "upheld",
+     "review_type": "wicket",
+     "umpires_call": false
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/replacements": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "innings": 1,
+     "delivery_number": 4,
+     "replacement_number": 1,
+     "over": 0,
+     "ball_in_over": 4,
+     "kind": "role",
+     "team": "Alpha",
+     "role": "batter",
+     "player_in": "A Four",
+     "player_in_id": "a4",
+     "player_out": "A Three",
+     "player_out_id": "a3",
+     "reason": "injury"
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/wickets": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "sequence": 1,
+     "innings": 1,
+     "delivery_number": 3,
+     "wicket_number": 1,
+     "over": 0,
+     "ball_in_over": 3,
+     "player_dismissed": "A Two",
+     "player_dismissed_id": "a2",
+     "wicket_type": "bowled",
+     "bowler": "B One",
+     "bowler_id": "b1",
+     "credited_to_bowler": true,
+     "fielders": []
+    },
+    {
+     "sequence": 2,
+     "innings": 1,
+     "delivery_number": 5,
+     "wicket_number": 1,
+     "over": 0,
+     "ball_in_over": 5,
+     "player_dismissed": "A Three",
+     "player_dismissed_id": "a3",
+     "wicket_type": "caught",
+     "bowler": "B Two",
+     "bowler_id": "b2",
+     "credited_to_bowler": true,
+     "fielders": [
+      {
+       "fielder_number": 1,
+       "fielder": "F One",
+       "fielder_id": "f1",
+       "substitute": false
+      }
+     ]
+    },
+    {
+     "sequence": 1,
+     "innings": 2,
+     "delivery_number": 2,
+     "wicket_number": 1,
+     "over": 0,
+     "ball_in_over": 2,
+     "player_dismissed": "B Four",
+     "player_dismissed_id": "b4",
+     "wicket_type": "retired hurt",
+     "bowler": "A Five",
+     "bowler_id": "a5",
+     "credited_to_bowler": false,
+     "fielders": []
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/1/notes": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "missing_data": [
+     {
+      "missing_number": 1,
+      "missing_type": "powerplays",
+      "innings": 2,
+      "powerplay_type": "fielding"
+     },
+     {
+      "missing_number": 2,
+      "missing_type": "player_of_match",
+      "innings": null,
+      "powerplay_type": null
+     }
+    ],
+    "miscounted_overs": [
+     {
+      "innings": 1,
+      "over": 0,
+      "balls": 5,
+      "umpire": "U One",
+      "umpire_id": "u1"
+     }
+    ],
+    "absent_hurt": [
+     {
+      "innings": 2,
+      "player": "B Five",
+      "player_id": "b5"
+     },
+     {
+      "innings": 2,
+      "player": "B Four",
+      "player_id": "b4"
+     }
+    ],
+    "dates": [
+     {
+      "date_number": 1,
+      "date": "2020-03-01"
+     },
+     {
+      "date_number": 2,
+      "date": "2020-03-02"
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/2/powerplays": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/2/reviews": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/2/replacements": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/2/wickets": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches/2/notes": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "missing_data": [],
+    "miscounted_overs": [],
+    "absent_hurt": [],
+    "dates": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "aliases": [],
+    "teams": [
+     {
+      "team": "Alpha",
+      "matches": 1,
+      "first_match": "2020-03-01",
+      "last_match": "2020-03-01"
+     }
+    ],
+    "external_ids": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/f1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "f1",
+    "name": "F One",
+    "aliases": [],
+    "teams": [],
+    "external_ids": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a4": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a4",
+    "name": "A Four",
+    "aliases": [],
+    "teams": [],
+    "external_ids": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/fielding": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "catches": 0,
+    "catches_as_fielder": 0,
+    "caught_and_bowled": 0,
+    "stumpings": 0,
+    "run_out_involvements": 0,
+    "substitute_involvements": 0
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/f1/fielding": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "f1",
+    "name": "F One",
+    "catches": 1,
+    "catches_as_fielder": 1,
+    "caught_and_bowled": 0,
+    "stumpings": 0,
+    "run_out_involvements": 0,
+    "substitute_involvements": 0
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/b1/fielding?format=ODI": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "b1",
+    "name": "B One",
+    "catches": 0,
+    "catches_as_fielder": 0,
+    "caught_and_bowled": 0,
+    "stumpings": 0,
+    "run_out_involvements": 0,
+    "substitute_involvements": 0
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/leaderboards/batting?metric=runs": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "metric": "runs",
+    "order": "desc",
+    "eligibility": {
+     "min_balls": null,
+     "min_dismissals": null
+    },
+    "limit": 25,
+    "leaders": [
+     {
+      "rank": 1,
+      "player_id": "a1",
+      "name": "A One",
+      "value": 6,
+      "totals": {
+       "matches": 2,
+       "innings": 2,
+       "not_outs": 2,
+       "runs": 6,
+       "balls_faced": 3,
+       "highest_score": 4,
+       "highest_score_not_out": true,
+       "average": null,
+       "strike_rate": 200.0,
+       "fifties": 0,
+       "hundreds": 0,
+       "ducks": 0,
+       "fours": 1,
+       "sixes": 0
+      }
+     },
+     {
+      "rank": 2,
+      "player_id": "a3",
+      "name": "A Three",
+      "value": 6,
+      "totals": {
+       "matches": 1,
+       "innings": 1,
+       "not_outs": 0,
+       "runs": 6,
+       "balls_faced": 2,
+       "highest_score": 6,
+       "highest_score_not_out": false,
+       "average": 6.0,
+       "strike_rate": 300.0,
+       "fifties": 0,
+       "hundreds": 0,
+       "ducks": 0,
+       "fours": 0,
+       "sixes": 1
+      }
+     },
+     {
+      "rank": 3,
+      "player_id": "b3",
+      "name": "B Three",
+      "value": 1,
+      "totals": {
+       "matches": 1,
+       "innings": 1,
+       "not_outs": 1,
+       "runs": 1,
+       "balls_faced": 1,
+       "highest_score": 1,
+       "highest_score_not_out": true,
+       "average": null,
+       "strike_rate": 100.0,
+       "fifties": 0,
+       "hundreds": 0,
+       "ducks": 0,
+       "fours": 0,
+       "sixes": 0
+      }
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/leaderboards/batting?metric=average&min_balls=1&min_dismissals=1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "metric": "average",
+    "order": "desc",
+    "eligibility": {
+     "min_balls": 1,
+     "min_dismissals": 1
+    },
+    "limit": 25,
+    "leaders": [
+     {
+      "rank": 1,
+      "player_id": "a3",
+      "name": "A Three",
+      "value": 6.0,
+      "totals": {
+       "matches": 1,
+       "innings": 1,
+       "not_outs": 0,
+       "runs": 6,
+       "balls_faced": 2,
+       "highest_score": 6,
+       "highest_score_not_out": false,
+       "average": 6.0,
+       "strike_rate": 300.0,
+       "fifties": 0,
+       "hundreds": 0,
+       "ducks": 0,
+       "fours": 0,
+       "sixes": 1
+      }
+     },
+     {
+      "rank": 2,
+      "player_id": "a2",
+      "name": "A Two",
+      "value": 0.0,
+      "totals": {
+       "matches": 1,
+       "innings": 1,
+       "not_outs": 0,
+       "runs": 0,
+       "balls_faced": 1,
+       "highest_score": 0,
+       "highest_score_not_out": false,
+       "average": 0.0,
+       "strike_rate": 0.0,
+       "fifties": 0,
+       "hundreds": 0,
+       "ducks": 1,
+       "fours": 0,
+       "sixes": 0
+      }
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/leaderboards/bowling?metric=wickets": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "metric": "wickets",
+    "order": "desc",
+    "eligibility": {
+     "min_balls": null,
+     "min_wickets": null
+    },
+    "limit": 25,
+    "leaders": [
+     {
+      "rank": 1,
+      "player_id": "b1",
+      "name": "B One",
+      "value": 1,
+      "totals": {
+       "matches": 3,
+       "innings": 3,
+       "balls": 10,
+       "runs": 7,
+       "wickets": 1,
+       "maidens": 1,
+       "average": 7.0,
+       "economy": 4.2,
+       "strike_rate": 10.0,
+       "best_wickets": 1,
+       "best_runs": 5,
+       "four_wicket_hauls": 0,
+       "five_wicket_hauls": 0,
+       "wides": 1,
+       "noballs": 0
+      }
+     },
+     {
+      "rank": 2,
+      "player_id": "b2",
+      "name": "B Two",
+      "value": 1,
+      "totals": {
+       "matches": 1,
+       "innings": 1,
+       "balls": 2,
+       "runs": 6,
+       "wickets": 1,
+       "maidens": 0,
+       "average": 6.0,
+       "economy": 18.0,
+       "strike_rate": 2.0,
+       "best_wickets": 1,
+       "best_runs": 6,
+       "four_wicket_hauls": 0,
+       "five_wicket_hauls": 0,
+       "wides": 0,
+       "noballs": 0
+      }
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/leaderboards/bowling?metric=economy&min_balls=1&limit=2": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "metric": "economy",
+    "order": "asc",
+    "eligibility": {
+     "min_balls": 1,
+     "min_wickets": null
+    },
+    "limit": 2,
+    "leaders": [
+     {
+      "rank": 1,
+      "player_id": "a5",
+      "name": "A Five",
+      "value": 3.0,
+      "totals": {
+       "matches": 1,
+       "innings": 1,
+       "balls": 2,
+       "runs": 1,
+       "wickets": 0,
+       "maidens": 0,
+       "average": null,
+       "economy": 3.0,
+       "strike_rate": null,
+       "best_wickets": 0,
+       "best_runs": 1,
+       "four_wicket_hauls": 0,
+       "five_wicket_hauls": 0,
+       "wides": 0,
+       "noballs": 0
+      }
+     },
+     {
+      "rank": 2,
+      "player_id": "b1",
+      "name": "B One",
+      "value": 4.2,
+      "totals": {
+       "matches": 3,
+       "innings": 3,
+       "balls": 10,
+       "runs": 7,
+       "wickets": 1,
+       "maidens": 1,
+       "average": 7.0,
+       "economy": 4.2,
+       "strike_rate": 10.0,
+       "best_wickets": 1,
+       "best_runs": 5,
+       "four_wicket_hauls": 0,
+       "five_wicket_hauls": 0,
+       "wides": 1,
+       "noballs": 0
+      }
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/leaderboards/bowling?metric=best_figures": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "metric": "best_figures",
+    "order": "desc",
+    "eligibility": {
+     "min_balls": null,
+     "min_wickets": null
+    },
+    "limit": 25,
+    "leaders": [
+     {
+      "rank": 1,
+      "player_id": "b1",
+      "name": "B One",
+      "value": 1,
+      "totals": {
+       "matches": 3,
+       "innings": 3,
+       "balls": 10,
+       "runs": 7,
+       "wickets": 1,
+       "maidens": 1,
+       "average": 7.0,
+       "economy": 4.2,
+       "strike_rate": 10.0,
+       "best_wickets": 1,
+       "best_runs": 5,
+       "four_wicket_hauls": 0,
+       "five_wicket_hauls": 0,
+       "wides": 1,
+       "noballs": 0
+      }
+     },
+     {
+      "rank": 2,
+      "player_id": "b2",
+      "name": "B Two",
+      "value": 1,
+      "totals": {
+       "matches": 1,
+       "innings": 1,
+       "balls": 2,
+       "runs": 6,
+       "wickets": 1,
+       "maidens": 0,
+       "average": 6.0,
+       "economy": 18.0,
+       "strike_rate": 2.0,
+       "best_wickets": 1,
+       "best_runs": 6,
+       "four_wicket_hauls": 0,
+       "five_wicket_hauls": 0,
+       "wides": 0,
+       "noballs": 0
+      }
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?q=alpha leeds": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 1,
+     "season": "2020",
+     "start_date": "2020-03-01",
+     "gender": "male",
+     "event": "Cup",
+     "format": "T20",
+     "type": "Fran(IPL)",
+     "venue": "Ground One, Leeds",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Alpha",
+     "winner_runs": 5,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Alpha",
+     "team_2": "Beta",
+     "city": "Leeds",
+     "end_date": "2020-03-01",
+     "scheduled_overs": 20,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "ipl",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": "2020-04-01",
+     "cricsheet_revision": 2,
+     "cricsheet_data_version": "1.1.0",
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?q=2021": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 2,
+     "season": "2021",
+     "start_date": "2021-05-10",
+     "gender": "female",
+     "event": "Series",
+     "format": "ODI",
+     "type": "Intl",
+     "venue": "Ground Two",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Gamma",
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "city": null,
+     "end_date": "2021-05-10",
+     "scheduled_overs": 50,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "odis",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?q=zzz": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?q=alpha&limit=1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 2,
+     "season": "2021",
+     "start_date": "2021-05-10",
+     "gender": "female",
+     "event": "Series",
+     "format": "ODI",
+     "type": "Intl",
+     "venue": "Ground Two",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Gamma",
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "city": null,
+     "end_date": "2021-05-10",
+     "scheduled_overs": 50,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "odis",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": "<masked>",
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?team=Alpha&opponent=Gamma": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 2,
+     "season": "2021",
+     "start_date": "2021-05-10",
+     "gender": "female",
+     "event": "Series",
+     "format": "ODI",
+     "type": "Intl",
+     "venue": "Ground Two",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": "Gamma",
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "city": null,
+     "end_date": "2021-05-10",
+     "scheduled_overs": 50,
+     "balls_per_over": 6,
+     "match_type_number": null,
+     "collection": "odis",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?team=Beta&opponent=Delta": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 3,
+     "season": "2022",
+     "start_date": "2022-01-05",
+     "gender": "male",
+     "event": "Hundred",
+     "format": "T20",
+     "type": "Fran(Hundred)",
+     "venue": "Ground Three",
+     "match_number": null,
+     "toss_winner": null,
+     "toss_decision": null,
+     "player_of_match": null,
+     "player_of_match_2": null,
+     "winner": null,
+     "winner_runs": null,
+     "winner_wickets": null,
+     "outcome": "no result",
+     "team_1": "Delta",
+     "team_2": "Beta",
+     "city": null,
+     "end_date": "2022-01-05",
+     "scheduled_overs": null,
+     "balls_per_over": 5,
+     "match_type_number": null,
+     "collection": "hnd",
+     "result_method": null,
+     "eliminator": null,
+     "umpire_1": null,
+     "umpire_2": null,
+     "tv_umpire": null,
+     "match_referee": null,
+     "won_by_innings": false,
+     "cricsheet_created": null,
+     "cricsheet_revision": null,
+     "cricsheet_data_version": null,
+     "event_group": null,
+     "event_sub_name": null,
+     "event_stage": null
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matches?team=Alpha&opponent=Delta": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/competitions?q=cup": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "collection": "ipl",
+     "event": "Cup",
+     "type": "Fran(IPL)",
+     "format": "T20",
+     "gender": "male",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01"
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/competitions?q=ipl": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "collection": "ipl",
+     "event": "Cup",
+     "type": "Fran(IPL)",
+     "format": "T20",
+     "gender": "male",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01"
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/competitions?q=zzz": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams/record?team=Alpha&gender=male": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Alpha",
+    "gender": "male",
+    "record": {
+     "matches": 1,
+     "wins": 1,
+     "losses": 0,
+     "draws": 0,
+     "ties": 0,
+     "no_results": 0,
+     "ties_won_eliminator": 0,
+     "ties_lost_eliminator": 0,
+     "ties_no_eliminator": 0,
+     "decisive_win_percentage": 100.0
+    },
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01",
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    }
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams/record?team=Gamma&gender=female": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Gamma",
+    "gender": "female",
+    "record": {
+     "matches": 1,
+     "wins": 1,
+     "losses": 0,
+     "draws": 0,
+     "ties": 0,
+     "no_results": 0,
+     "ties_won_eliminator": 0,
+     "ties_lost_eliminator": 0,
+     "ties_no_eliminator": 0,
+     "decisive_win_percentage": 100.0
+    },
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 1,
+     "first_match": "2021-05-10",
+     "last_match": "2021-05-10",
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    }
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams/record?team=Alpha&gender=male&date_from=2030-01-01": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Alpha",
+    "gender": "male",
+    "record": {
+     "matches": 0,
+     "wins": 0,
+     "losses": 0,
+     "draws": 0,
+     "ties": 0,
+     "no_results": 0,
+     "ties_won_eliminator": 0,
+     "ties_lost_eliminator": 0,
+     "ties_no_eliminator": 0,
+     "decisive_win_percentage": null
+    },
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 0,
+     "first_match": null,
+     "last_match": null,
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    }
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams/record/splits?team=Alpha&gender=male&by=format": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Alpha",
+    "gender": "male",
+    "by": "format",
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01",
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    },
+    "groups": [
+     {
+      "key": "T20",
+      "label": "T20",
+      "matches": 1,
+      "wins": 1,
+      "losses": 0,
+      "draws": 0,
+      "ties": 0,
+      "no_results": 0,
+      "ties_won_eliminator": 0,
+      "ties_lost_eliminator": 0,
+      "ties_no_eliminator": 0,
+      "decisive_win_percentage": 100.0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams/record/splits?team=Alpha&gender=male&by=venue&limit=1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Alpha",
+    "gender": "male",
+    "by": "venue",
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01",
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    },
+    "groups": [
+     {
+      "key": "Ground One, Leeds",
+      "label": "Ground One, Leeds",
+      "matches": 1,
+      "wins": 1,
+      "losses": 0,
+      "draws": 0,
+      "ties": 0,
+      "no_results": 0,
+      "ties_won_eliminator": 0,
+      "ties_lost_eliminator": 0,
+      "ties_no_eliminator": 0,
+      "decisive_win_percentage": 100.0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/head-to-head?team=Alpha&opponent=Beta&gender=male": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Alpha",
+    "opponent": "Beta",
+    "gender": "male",
+    "record": {
+     "matches": 1,
+     "wins": 1,
+     "losses": 0,
+     "draws": 0,
+     "ties": 0,
+     "no_results": 0,
+     "ties_won_eliminator": 0,
+     "ties_lost_eliminator": 0,
+     "ties_no_eliminator": 0,
+     "decisive_win_percentage": 100.0
+    },
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01",
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    }
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/head-to-head?team=Beta&opponent=Alpha&gender=male": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Beta",
+    "opponent": "Alpha",
+    "gender": "male",
+    "record": {
+     "matches": 1,
+     "wins": 0,
+     "losses": 1,
+     "draws": 0,
+     "ties": 0,
+     "no_results": 0,
+     "ties_won_eliminator": 0,
+     "ties_lost_eliminator": 0,
+     "ties_no_eliminator": 0,
+     "decisive_win_percentage": 0.0
+    },
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01",
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    }
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/head-to-head?team=Alpha&opponent=Delta&gender=male": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Alpha",
+    "opponent": "Delta",
+    "gender": "male",
+    "record": {
+     "matches": 0,
+     "wins": 0,
+     "losses": 0,
+     "draws": 0,
+     "ties": 0,
+     "no_results": 0,
+     "ties_won_eliminator": 0,
+     "ties_lost_eliminator": 0,
+     "ties_no_eliminator": 0,
+     "decisive_win_percentage": null
+    },
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 0,
+     "first_match": null,
+     "last_match": null,
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    }
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/head-to-head/splits?team=Alpha&opponent=Beta&gender=male&by=season": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "team": "Alpha",
+    "opponent": "Beta",
+    "gender": "male",
+    "by": "season",
+    "coverage": {
+     "scope": "this dataset",
+     "matches": 1,
+     "first_match": "2020-03-01",
+     "last_match": "2020-03-01",
+     "note": "Counted from the Cricsheet matches in this dataset only. These are not complete historical records. See /v1/meta for the served data's coverage."
+    },
+    "groups": [
+     {
+      "key": "2020",
+      "label": "2020",
+      "matches": 1,
+      "wins": 1,
+      "losses": 0,
+      "draws": 0,
+      "ties": 0,
+      "no_results": 0,
+      "ties_won_eliminator": 0,
+      "ties_lost_eliminator": 0,
+      "ties_no_eliminator": 0,
+      "decisive_win_percentage": 100.0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams?gender=female": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "team": "Alpha",
+     "gender": "female",
+     "matches": 1
+    },
+    {
+     "team": "Gamma",
+     "gender": "female",
+     "matches": 1
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/teams?gender=male&q=alp": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "team": "Alpha",
+     "gender": "male",
+     "matches": 1
+    }
+   ],
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting/splits?by=opponent": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "by": "opponent",
+    "groups": [
+     {
+      "key": "Alpha",
+      "label": "Alpha",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 2,
+      "balls_faced": 1,
+      "highest_score": 2,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 0,
+      "sixes": 0
+     },
+     {
+      "key": "Beta",
+      "label": "Beta",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 4,
+      "balls_faced": 2,
+      "highest_score": 4,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 1,
+      "sixes": 0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting/splits?by=venue": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "by": "venue",
+    "groups": [
+     {
+      "key": "Ground One, Leeds",
+      "label": "Ground One, Leeds",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 4,
+      "balls_faced": 2,
+      "highest_score": 4,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 1,
+      "sixes": 0
+     },
+     {
+      "key": "Ground Two",
+      "label": "Ground Two",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 2,
+      "balls_faced": 1,
+      "highest_score": 2,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 0,
+      "sixes": 0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting/splits?by=competition": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "by": "competition",
+    "groups": [
+     {
+      "key": "ipl",
+      "label": "IPL",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 4,
+      "balls_faced": 2,
+      "highest_score": 4,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 1,
+      "sixes": 0
+     },
+     {
+      "key": "odis",
+      "label": "ODIs",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 2,
+      "balls_faced": 1,
+      "highest_score": 2,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 0,
+      "sixes": 0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting/splits?by=format": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "by": "format",
+    "groups": [
+     {
+      "key": "ODI",
+      "label": "ODI",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 2,
+      "balls_faced": 1,
+      "highest_score": 2,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 0,
+      "sixes": 0
+     },
+     {
+      "key": "T20",
+      "label": "T20",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 4,
+      "balls_faced": 2,
+      "highest_score": 4,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 1,
+      "sixes": 0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/b1/bowling/splits?by=opponent": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "b1",
+    "name": "B One",
+    "by": "opponent",
+    "groups": [
+     {
+      "key": "Alpha",
+      "label": "Alpha",
+      "matches": 1,
+      "innings": 1,
+      "balls": 3,
+      "runs": 5,
+      "wickets": 1,
+      "maidens": 0,
+      "average": 5.0,
+      "economy": 10.0,
+      "strike_rate": 3.0,
+      "best_wickets": 1,
+      "best_runs": 5,
+      "four_wicket_hauls": 0,
+      "five_wicket_hauls": 0,
+      "wides": 1,
+      "noballs": 0
+     },
+     {
+      "key": "Delta",
+      "label": "Delta",
+      "matches": 1,
+      "innings": 1,
+      "balls": 6,
+      "runs": 0,
+      "wickets": 0,
+      "maidens": 1,
+      "average": null,
+      "economy": 0.0,
+      "strike_rate": null,
+      "best_wickets": 0,
+      "best_runs": 0,
+      "four_wicket_hauls": 0,
+      "five_wicket_hauls": 0,
+      "wides": 0,
+      "noballs": 0
+     },
+     {
+      "key": "Gamma",
+      "label": "Gamma",
+      "matches": 1,
+      "innings": 1,
+      "balls": 1,
+      "runs": 2,
+      "wickets": 0,
+      "maidens": 0,
+      "average": null,
+      "economy": 12.0,
+      "strike_rate": null,
+      "best_wickets": 0,
+      "best_runs": 2,
+      "four_wicket_hauls": 0,
+      "five_wicket_hauls": 0,
+      "wides": 0,
+      "noballs": 0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/f1/fielding/splits?by=opponent": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "f1",
+    "name": "F One",
+    "by": "opponent",
+    "groups": [
+     {
+      "key": "Alpha",
+      "label": "Alpha",
+      "matches": 1,
+      "catches": 1,
+      "catches_as_fielder": 1,
+      "caught_and_bowled": 0,
+      "stumpings": 0,
+      "run_out_involvements": 0,
+      "substitute_involvements": 0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting/splits?by=opponent&limit=1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "by": "opponent",
+    "groups": [
+     {
+      "key": "Alpha",
+      "label": "Alpha",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 2,
+      "balls_faced": 1,
+      "highest_score": 2,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 0,
+      "sixes": 0
+     }
+    ]
+   },
+   "next_cursor": "<masked>",
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting/splits?by=format&format=ODI": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "by": "format",
+    "groups": [
+     {
+      "key": "ODI",
+      "label": "ODI",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 2,
+      "balls_faced": 1,
+      "highest_score": 2,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 0,
+      "sixes": 0
+     }
+    ]
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/x1/batting/splits?by=venue": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "x1",
+    "name": "100% Real_Name",
+    "by": "venue",
+    "groups": []
+   },
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/matches": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 2,
+     "start_date": "2021-05-10",
+     "season": "2021",
+     "event": "Series",
+     "collection": "odis",
+     "format": "ODI",
+     "gender": "female",
+     "venue": "Ground Two",
+     "city": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "winner": "Gamma",
+     "outcome": null,
+     "team": "Gamma",
+     "in_squad": false,
+     "batted": true,
+     "bowled": false,
+     "fielded": false,
+     "fielded_as_substitute": false,
+     "absent_hurt": false,
+     "replaced_in": false,
+     "replaced_out": false,
+     "super_over": false,
+     "recorded_on_field": true
+    },
+    {
+     "match_id": 1,
+     "start_date": "2020-03-01",
+     "season": "2020",
+     "event": "Cup",
+     "collection": "ipl",
+     "format": "T20",
+     "gender": "male",
+     "venue": "Ground One, Leeds",
+     "city": "Leeds",
+     "team_1": "Alpha",
+     "team_2": "Beta",
+     "winner": "Alpha",
+     "outcome": null,
+     "team": "Alpha",
+     "in_squad": true,
+     "batted": true,
+     "bowled": false,
+     "fielded": false,
+     "fielded_as_substitute": false,
+     "absent_hurt": false,
+     "replaced_in": false,
+     "replaced_out": false,
+     "super_over": false,
+     "recorded_on_field": true
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/f1/matches": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 1,
+     "start_date": "2020-03-01",
+     "season": "2020",
+     "event": "Cup",
+     "collection": "ipl",
+     "format": "T20",
+     "gender": "male",
+     "venue": "Ground One, Leeds",
+     "city": "Leeds",
+     "team_1": "Alpha",
+     "team_2": "Beta",
+     "winner": "Alpha",
+     "outcome": null,
+     "team": "Beta",
+     "in_squad": false,
+     "batted": false,
+     "bowled": false,
+     "fielded": true,
+     "fielded_as_substitute": false,
+     "absent_hurt": false,
+     "replaced_in": false,
+     "replaced_out": false,
+     "super_over": false,
+     "recorded_on_field": true
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a4/matches": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 1,
+     "start_date": "2020-03-01",
+     "season": "2020",
+     "event": "Cup",
+     "collection": "ipl",
+     "format": "T20",
+     "gender": "male",
+     "venue": "Ground One, Leeds",
+     "city": "Leeds",
+     "team_1": "Alpha",
+     "team_2": "Beta",
+     "winner": "Alpha",
+     "outcome": null,
+     "team": "Alpha",
+     "in_squad": false,
+     "batted": false,
+     "bowled": false,
+     "fielded": false,
+     "fielded_as_substitute": false,
+     "absent_hurt": false,
+     "replaced_in": true,
+     "replaced_out": false,
+     "super_over": false,
+     "recorded_on_field": false
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/b5/matches": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 1,
+     "start_date": "2020-03-01",
+     "season": "2020",
+     "event": "Cup",
+     "collection": "ipl",
+     "format": "T20",
+     "gender": "male",
+     "venue": "Ground One, Leeds",
+     "city": "Leeds",
+     "team_1": "Alpha",
+     "team_2": "Beta",
+     "winner": "Alpha",
+     "outcome": null,
+     "team": null,
+     "in_squad": false,
+     "batted": false,
+     "bowled": false,
+     "fielded": false,
+     "fielded_as_substitute": false,
+     "absent_hurt": true,
+     "replaced_in": false,
+     "replaced_out": false,
+     "super_over": false,
+     "recorded_on_field": false
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/x1/matches": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/matches?limit=1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 2,
+     "start_date": "2021-05-10",
+     "season": "2021",
+     "event": "Series",
+     "collection": "odis",
+     "format": "ODI",
+     "gender": "female",
+     "venue": "Ground Two",
+     "city": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "winner": "Gamma",
+     "outcome": null,
+     "team": "Gamma",
+     "in_squad": false,
+     "batted": true,
+     "bowled": false,
+     "fielded": false,
+     "fielded_as_substitute": false,
+     "absent_hurt": false,
+     "replaced_in": false,
+     "replaced_out": false,
+     "super_over": false,
+     "recorded_on_field": true
+    }
+   ],
+   "next_cursor": "<masked>",
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/matches?format=ODI": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": [
+    {
+     "match_id": 2,
+     "start_date": "2021-05-10",
+     "season": "2021",
+     "event": "Series",
+     "collection": "odis",
+     "format": "ODI",
+     "gender": "female",
+     "venue": "Ground Two",
+     "city": null,
+     "team_1": "Gamma",
+     "team_2": "Alpha",
+     "winner": "Gamma",
+     "outcome": null,
+     "team": "Gamma",
+     "in_squad": false,
+     "batted": true,
+     "bowled": false,
+     "fielded": false,
+     "fielded_as_substitute": false,
+     "absent_hurt": false,
+     "replaced_in": false,
+     "replaced_out": false,
+     "super_over": false,
+     "recorded_on_field": true
+    }
+   ],
+   "next_cursor": null,
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matchups?batter=a1&bowler=b1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "batter": {
+     "player_id": "a1",
+     "name": "A One"
+    },
+    "bowler": {
+     "player_id": "b1",
+     "name": "B One"
+    },
+    "matches": 2,
+    "innings": 2,
+    "deliveries": 4,
+    "balls_faced": 3,
+    "runs": 6,
+    "fours": 1,
+    "sixes": 0,
+    "strike_rate": 200.0,
+    "dismissals": 0,
+    "bowler_wickets": 0,
+    "average": null,
+    "balls_per_dismissal": null,
+    "dismissal_kinds": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matchups?batter=a3&bowler=b2": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "batter": {
+     "player_id": "a3",
+     "name": "A Three"
+    },
+    "bowler": {
+     "player_id": "b2",
+     "name": "B Two"
+    },
+    "matches": 1,
+    "innings": 1,
+    "deliveries": 2,
+    "balls_faced": 2,
+    "runs": 6,
+    "fours": 0,
+    "sixes": 1,
+    "strike_rate": 300.0,
+    "dismissals": 1,
+    "bowler_wickets": 1,
+    "average": 6.0,
+    "balls_per_dismissal": 2.0,
+    "dismissal_kinds": [
+     {
+      "kind": "caught",
+      "count": 1
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matchups?batter=a2&bowler=b1&format=ODI": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "batter": {
+     "player_id": "a2",
+     "name": "A Two"
+    },
+    "bowler": {
+     "player_id": "b1",
+     "name": "B One"
+    },
+    "matches": 0,
+    "innings": 0,
+    "deliveries": 0,
+    "balls_faced": 0,
+    "runs": 0,
+    "fours": 0,
+    "sixes": 0,
+    "strike_rate": null,
+    "dismissals": 0,
+    "bowler_wickets": 0,
+    "average": null,
+    "balls_per_dismissal": null,
+    "dismissal_kinds": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/matchups?batter=a1&bowler=a1": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "batter": {
+     "player_id": "a1",
+     "name": "A One"
+    },
+    "bowler": {
+     "player_id": "a1",
+     "name": "A One"
+    },
+    "matches": 0,
+    "innings": 0,
+    "deliveries": 0,
+    "balls_faced": 0,
+    "runs": 0,
+    "fours": 0,
+    "sixes": 0,
+    "strike_rate": null,
+    "dismissals": 0,
+    "bowler_wickets": 0,
+    "average": null,
+    "balls_per_dismissal": null,
+    "dismissal_kinds": []
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting/seasons": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "seasons": [
+     {
+      "season": "2020",
+      "first_match": "2020-03-01",
+      "last_match": "2020-03-01",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 4,
+      "balls_faced": 2,
+      "highest_score": 4,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 1,
+      "sixes": 0
+     },
+     {
+      "season": "2021",
+      "first_match": "2021-05-10",
+      "last_match": "2021-05-10",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 2,
+      "balls_faced": 1,
+      "highest_score": 2,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 0,
+      "sixes": 0
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/b1/bowling/seasons": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "b1",
+    "name": "B One",
+    "seasons": [
+     {
+      "season": "2020",
+      "first_match": "2020-03-01",
+      "last_match": "2020-03-01",
+      "matches": 1,
+      "innings": 1,
+      "balls": 3,
+      "runs": 5,
+      "wickets": 1,
+      "maidens": 0,
+      "average": 5.0,
+      "economy": 10.0,
+      "strike_rate": 3.0,
+      "best_wickets": 1,
+      "best_runs": 5,
+      "four_wicket_hauls": 0,
+      "five_wicket_hauls": 0,
+      "wides": 1,
+      "noballs": 0
+     },
+     {
+      "season": "2021",
+      "first_match": "2021-05-10",
+      "last_match": "2021-05-10",
+      "matches": 1,
+      "innings": 1,
+      "balls": 1,
+      "runs": 2,
+      "wickets": 0,
+      "maidens": 0,
+      "average": null,
+      "economy": 12.0,
+      "strike_rate": null,
+      "best_wickets": 0,
+      "best_runs": 2,
+      "four_wicket_hauls": 0,
+      "five_wicket_hauls": 0,
+      "wides": 0,
+      "noballs": 0
+     },
+     {
+      "season": "2022",
+      "first_match": "2022-01-05",
+      "last_match": "2022-01-05",
+      "matches": 1,
+      "innings": 1,
+      "balls": 6,
+      "runs": 0,
+      "wickets": 0,
+      "maidens": 1,
+      "average": null,
+      "economy": 0.0,
+      "strike_rate": null,
+      "best_wickets": 0,
+      "best_runs": 0,
+      "four_wicket_hauls": 0,
+      "five_wicket_hauls": 0,
+      "wides": 0,
+      "noballs": 0
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/f1/fielding/seasons": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "f1",
+    "name": "F One",
+    "seasons": [
+     {
+      "season": "2020",
+      "first_match": "2020-03-01",
+      "last_match": "2020-03-01",
+      "catches": 1,
+      "catches_as_fielder": 1,
+      "caught_and_bowled": 0,
+      "stumpings": 0,
+      "run_out_involvements": 0,
+      "substitute_involvements": 0
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting/seasons?format=ODI": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "seasons": [
+     {
+      "season": "2021",
+      "first_match": "2021-05-10",
+      "last_match": "2021-05-10",
+      "matches": 1,
+      "innings": 1,
+      "not_outs": 1,
+      "runs": 2,
+      "balls_faced": 1,
+      "highest_score": 2,
+      "highest_score_not_out": true,
+      "average": null,
+      "strike_rate": 200.0,
+      "fifties": 0,
+      "hundreds": 0,
+      "ducks": 0,
+      "fours": 0,
+      "sixes": 0
+     }
+    ]
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "matches": 2,
+    "innings": 2,
+    "not_outs": 2,
+    "runs": 6,
+    "balls_faced": 3,
+    "highest_score": 4,
+    "highest_score_not_out": true,
+    "average": null,
+    "strike_rate": 200.0,
+    "fifties": 0,
+    "hundreds": 0,
+    "ducks": 0,
+    "fours": 1,
+    "sixes": 0
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a2/batting": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a2",
+    "name": "A Two",
+    "matches": 1,
+    "innings": 1,
+    "not_outs": 0,
+    "runs": 0,
+    "balls_faced": 1,
+    "highest_score": 0,
+    "highest_score_not_out": false,
+    "average": 0.0,
+    "strike_rate": 0.0,
+    "fifties": 0,
+    "hundreds": 0,
+    "ducks": 1,
+    "fours": 0,
+    "sixes": 0
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/b1/bowling": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "b1",
+    "name": "B One",
+    "matches": 3,
+    "innings": 3,
+    "balls": 10,
+    "runs": 7,
+    "wickets": 1,
+    "maidens": 1,
+    "average": 7.0,
+    "economy": 4.2,
+    "strike_rate": 10.0,
+    "best_wickets": 1,
+    "best_runs": 5,
+    "four_wicket_hauls": 0,
+    "five_wicket_hauls": 0,
+    "wides": 1,
+    "noballs": 0
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/a1/batting?format=ODI": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "a1",
+    "name": "A One",
+    "matches": 1,
+    "innings": 1,
+    "not_outs": 1,
+    "runs": 2,
+    "balls_faced": 1,
+    "highest_score": 2,
+    "highest_score_not_out": true,
+    "average": null,
+    "strike_rate": 200.0,
+    "fifties": 0,
+    "hundreds": 0,
+    "ducks": 0,
+    "fours": 0,
+    "sixes": 0
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ },
+ "/v1/players/b1/bowling?collection=ipl&date_from=2020-01-01": {
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+   "data": {
+    "player_id": "b1",
+    "name": "B One",
+    "matches": 1,
+    "innings": 1,
+    "balls": 3,
+    "runs": 5,
+    "wickets": 1,
+    "maidens": 0,
+    "average": 5.0,
+    "economy": 10.0,
+    "strike_rate": 3.0,
+    "best_wickets": 1,
+    "best_runs": 5,
+    "four_wicket_hauls": 0,
+    "five_wicket_hauls": 0,
+    "wides": 1,
+    "noballs": 0
+   },
+   "source": {
+    "name": "Cricsheet",
+    "url": "https://cricsheet.org/",
+    "licence": "ODC-By 1.0",
+    "licence_url": "https://opendatacommons.org/licenses/by/1-0/"
+   }
+  }
+ }
+}

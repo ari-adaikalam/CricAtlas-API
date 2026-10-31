@@ -1,0 +1,426 @@
+{
+ "data_version": "56542ec4db88",
+ "built_at_utc": "2026-10-13 08:49:16",
+ "snapshot_date": null,
+ "source": "Cricsheet",
+ "source_url": "https://cricsheet.org/",
+ "licence": "Open Data Commons Attribution License 1.0",
+ "licence_url": "https://opendatacommons.org/licenses/by/1-0/",
+ "attribution": "Contains data from Cricsheet (https://cricsheet.org/), made available under the Open Data Commons Attribution License 1.0 (ODC-By). You may share and adapt it with attribution.",
+ "features": {
+  "player_profiles": true
+ },
+ "player_universe": {
+  "players": 416,
+  "from_players_csv": 375,
+  "added": 41,
+  "ids_with_more_than_one_spelling": 0,
+  "ids_with_conflicting_spellings": 0
+ },
+ "tables": {
+  "balls": {
+   "file": "balls.parquet",
+   "rows": 18328,
+   "bytes": 173545,
+   "sha256": "91cf2fa8ffbf4bc572a4a2f7ab1f5560921de9038907b1515968378dadcbf7b2",
+   "columns": [
+    "match_id",
+    "season",
+    "start_date",
+    "innings",
+    "delivery_number",
+    "over",
+    "ball_in_over",
+    "scorecard_ball",
+    "is_legal_delivery",
+    "batting_team",
+    "bowling_team",
+    "striker",
+    "striker_id",
+    "non_striker",
+    "bowler",
+    "bowler_id",
+    "runs_off_bat",
+    "extras",
+    "wides",
+    "noballs",
+    "byes",
+    "legbyes",
+    "penalty",
+    "wicket_type",
+    "player_dismissed",
+    "other_wicket_type",
+    "other_player_dismissed",
+    "wicket",
+    "striker balls faced",
+    "total striker runs",
+    "player out runs",
+    "player out balls faced",
+    "gender",
+    "event",
+    "format",
+    "type",
+    "country_striker",
+    "batting style_striker",
+    "bowling style_striker",
+    "playing role_striker",
+    "striker_age",
+    "country_bowler",
+    "batting style_bowler",
+    "bowling style_bowler",
+    "playing role_bowler",
+    "bowler_age",
+    "fielder_1",
+    "fielder_1_id",
+    "fielder_1_substitute",
+    "non_boundary"
+   ]
+  },
+  "matches": {
+   "file": "matches.parquet",
+   "rows": 22,
+   "bytes": 10057,
+   "sha256": "5bc9c87c90fd8df3d211c3b8f67d45ee7d4f660cab6aabf7f46255c725da8890",
+   "columns": [
+    "match_id",
+    "season",
+    "start_date",
+    "gender",
+    "event",
+    "format",
+    "type",
+    "venue",
+    "match_number",
+    "toss_winner",
+    "toss_decision",
+    "player_of_match",
+    "player_of_match_2",
+    "winner",
+    "winner_runs",
+    "winner_wickets",
+    "outcome",
+    "team_1",
+    "team_2",
+    "city",
+    "end_date",
+    "scheduled_overs",
+    "balls_per_over",
+    "match_type_number",
+    "collection",
+    "result_method",
+    "eliminator",
+    "umpire_1",
+    "umpire_2",
+    "tv_umpire",
+    "match_referee",
+    "won_by_innings",
+    "cricsheet_created",
+    "cricsheet_revision",
+    "cricsheet_data_version",
+    "event_group",
+    "event_sub_name",
+    "event_stage"
+   ]
+  },
+  "players": {
+   "file": "players.parquet",
+   "rows": 416,
+   "bytes": 5760,
+   "sha256": "126adbe7901ae86122ff2b7906390afdefe0f38a5b8f21365ede33120f00bf8d",
+   "columns": [
+    "player_id",
+    "name"
+   ]
+  },
+  "player_names": {
+   "file": "player_names.parquet",
+   "rows": 416,
+   "bytes": 6604,
+   "sha256": "27bd6544070ba558cd17e9599ca5630f3cd792f3e1e534bc35b578b56523f5f5",
+   "columns": [
+    "player_id",
+    "name",
+    "uses"
+   ]
+  },
+  "wickets": {
+   "file": "wickets.parquet",
+   "rows": 397,
+   "bytes": 6677,
+   "sha256": "025c1fc29dc4a77827605b669cad536ef11eaf19fcbeb730ac855e69db1bd54f",
+   "columns": [
+    "match_id",
+    "innings",
+    "delivery_number",
+    "wicket_number",
+    "player_dismissed",
+    "player_dismissed_id",
+    "wicket_type"
+   ]
+  },
+  "wicket_fielders": {
+   "file": "wicket_fielders.parquet",
+   "rows": 245,
+   "bytes": 4593,
+   "sha256": "47327822146c88fea47585008fddf9e45eb9e424ca20c0af51fb9e76a1714727",
+   "columns": [
+    "match_id",
+    "innings",
+    "delivery_number",
+    "wicket_number",
+    "fielder_number",
+    "fielder",
+    "fielder_id",
+    "substitute"
+   ]
+  },
+  "match_people": {
+   "file": "match_people.parquet",
+   "rows": 586,
+   "bytes": 8922,
+   "sha256": "923776f93fa9ee7b423768a1bcc683de9e9abba8411f0facefb5dfaaf5901368",
+   "columns": [
+    "match_id",
+    "role",
+    "person_number",
+    "team",
+    "person",
+    "person_id"
+   ]
+  },
+  "innings": {
+   "file": "innings.parquet",
+   "rows": 58,
+   "bytes": 2161,
+   "sha256": "92be37eda596b3865af5195565ed564f8545df49353316a187c12f80fd9bcc45",
+   "columns": [
+    "match_id",
+    "innings",
+    "batting_team",
+    "target_runs",
+    "target_overs",
+    "is_super_over",
+    "declared",
+    "penalty_runs_pre",
+    "penalty_runs_post"
+   ]
+  },
+  "powerplays": {
+   "file": "powerplays.parquet",
+   "rows": 39,
+   "bytes": 2892,
+   "sha256": "cf0ee16f5228f5c984a13dcd7b0d6ba63ef86a7cdcc5a26556c0de25ac19ac00",
+   "columns": [
+    "match_id",
+    "innings",
+    "powerplay_number",
+    "type",
+    "start_over",
+    "start_ball_in_over",
+    "start_delivery_number",
+    "end_over",
+    "end_ball_in_over",
+    "end_delivery_number",
+    "start_listed",
+    "end_listed"
+   ]
+  },
+  "reviews": {
+   "file": "reviews.parquet",
+   "rows": 60,
+   "bytes": 3496,
+   "sha256": "0d4159881e89aa60a00a1498fda49838cddb82d7986906da1934546c2d934564",
+   "columns": [
+    "match_id",
+    "innings",
+    "delivery_number",
+    "review_by",
+    "umpire",
+    "umpire_id",
+    "batter",
+    "batter_id",
+    "decision",
+    "review_type",
+    "umpires_call"
+   ]
+  },
+  "match_replacements": {
+   "file": "match_replacements.parquet",
+   "rows": 10,
+   "bytes": 2659,
+   "sha256": "adab0c2aa036209c02cc89d0e9ec963b31677a5d81698d0cc6211804c5df418b",
+   "columns": [
+    "match_id",
+    "innings",
+    "delivery_number",
+    "replacement_number",
+    "kind",
+    "team",
+    "role",
+    "player_in",
+    "player_in_id",
+    "player_out",
+    "player_out_id",
+    "reason"
+   ]
+  },
+  "match_missing": {
+   "file": "match_missing.parquet",
+   "rows": 8,
+   "bytes": 902,
+   "sha256": "e23c9611dcb785891279d7078e55650934ca1ea74dc4a483bdd6d9e10527ab01",
+   "columns": [
+    "match_id",
+    "missing_number",
+    "missing_type",
+    "innings",
+    "powerplay_type"
+   ]
+  },
+  "miscounted_overs": {
+   "file": "miscounted_overs.parquet",
+   "rows": 2,
+   "bytes": 742,
+   "sha256": "dbff105dbac3ce761d2897105d52c466274005fcb69cac04a0c0600329af7875",
+   "columns": [
+    "match_id",
+    "innings",
+    "over",
+    "balls",
+    "umpire",
+    "umpire_id"
+   ]
+  },
+  "innings_absent_hurt": {
+   "file": "innings_absent_hurt.parquet",
+   "rows": 3,
+   "bytes": 690,
+   "sha256": "4aa78e892e22479536636a1ff5c01d77262c82780efe7946c243f00ba22faa7a",
+   "columns": [
+    "match_id",
+    "innings",
+    "player",
+    "player_id"
+   ]
+  },
+  "match_dates": {
+   "file": "match_dates.parquet",
+   "rows": 44,
+   "bytes": 793,
+   "sha256": "b9a23083c2d3e0f1d777811624205aa3d648dc4cc3344c592daea2d160f22ad8",
+   "columns": [
+    "match_id",
+    "date_number",
+    "date"
+   ]
+  },
+  "player_external_ids": {
+   "file": "player_external_ids.parquet",
+   "rows": 675,
+   "bytes": 7409,
+   "sha256": "b81542e010a4012b5f18401d5da02883c34be8e68a01767f535867c709c7059c",
+   "columns": [
+    "player_id",
+    "source",
+    "external_id"
+   ]
+  },
+  "player_batting_innings": {
+   "file": "player_batting_innings.parquet",
+   "rows": 479,
+   "bytes": 5968,
+   "sha256": "8aee6ca19d7de593be0f6799a856d7655ecc424c7f51c5e7b43f12579c6bcc30",
+   "columns": [
+    "player_id",
+    "match_id",
+    "innings",
+    "opponent",
+    "runs",
+    "balls",
+    "fours",
+    "sixes",
+    "is_out"
+   ]
+  },
+  "player_bowling_spells": {
+   "file": "player_bowling_spells.parquet",
+   "rows": 314,
+   "bytes": 4668,
+   "sha256": "7891fcefc9b4c1f8177296bea46c0e11ff1681a1009932271f430c358372d461",
+   "columns": [
+    "player_id",
+    "match_id",
+    "innings",
+    "balls",
+    "runs",
+    "wickets",
+    "wides",
+    "noballs",
+    "maidens"
+   ]
+  },
+  "player_fielding_events": {
+   "file": "player_fielding_events.parquet",
+   "rows": 257,
+   "bytes": 3016,
+   "sha256": "9b2599e9de9e7cdeecf436af91a6bf2b5850082f7fee5f5c2651acac51ca78a0",
+   "columns": [
+    "player_id",
+    "match_id",
+    "innings",
+    "delivery_number",
+    "wicket_number",
+    "kind"
+   ]
+  },
+  "player_match_involvement": {
+   "file": "player_match_involvement.parquet",
+   "rows": 498,
+   "bytes": 5279,
+   "sha256": "9ba58300c5424837f89e067066ab07413cdfb4f4b9c38e4585f35f3a3f8297a0",
+   "columns": [
+    "player_id",
+    "match_id",
+    "in_squad",
+    "batted",
+    "bowled",
+    "fielded",
+    "fielded_as_substitute",
+    "absent_hurt",
+    "replaced_in",
+    "replaced_out",
+    "super_over",
+    "recorded_on_field",
+    "team"
+   ]
+  },
+  "batter_bowler_innings": {
+   "file": "batter_bowler_innings.parquet",
+   "rows": 1487,
+   "bytes": 13738,
+   "sha256": "a1f35e188177486fdcf263308165271f9d6e05e9fa45a8f91af8e4f8eaa22ece",
+   "columns": [
+    "batter_id",
+    "bowler_id",
+    "match_id",
+    "innings",
+    "deliveries",
+    "balls_faced",
+    "runs",
+    "fours",
+    "sixes",
+    "dismissal_kinds"
+   ]
+  },
+  "match_scorecards": {
+   "file": "match_scorecards.parquet",
+   "rows": 22,
+   "bytes": 35219,
+   "sha256": "84c4a0c36958c7e5cac221299b65be1654ae788770ad8a8c15fc949e1e631654",
+   "columns": [
+    "match_id",
+    "scorecard"
+   ]
+  }
+ }
+}

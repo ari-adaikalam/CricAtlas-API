@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+{% set colours = {"ok": ("#112519", "#3f7d4f"), "warn": ("#2a2410", "#a88a2c"), "bad": ("#2a1214", "#c4313a")}[tone] %}
+<div style="background:{{ colours[0] }};border:1px solid {{ colours[1] }};border-radius:10px;padding:10px 14px;margin:0 0 12px 0;"><strong>{{ headline }}</strong> {{ meaning }}</div>
+<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;width:100%;font-size:14px;">
+{% for label, value in rows %}
+<tr><td style="padding:4px 12px 4px 0;color:#a8a8a8;white-space:nowrap;vertical-align:top;">{{ label }}</td><td style="padding:4px 0;">{{ value }}</td></tr>
+{% endfor %}
+</table>
+{% if phases %}
+<p style="margin:14px 0 4px 0;color:#a8a8a8;font-size:13px;">Time by phase</p>
+<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:14px;">
+{% for phase in phases %}
+<tr><td style="padding:2px 18px 2px 0;">{{ phase.name }}</td><td style="padding:2px 0;">{{ phase.time }}</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+{% if journal_phase %}<p style="margin:12px 0 0 0;font-size:13px;color:#a8a8a8;">Publication journal: {{ journal_phase }}.</p>{% endif %}
+<p style="margin:12px 0 0 0;font-size:13px;color:#a8a8a8;">Attempt {{ attempt }}. One message per refresh attempt. The 9 pm summary is separate.</p>
+{% if shrunk %}<p style="margin:12px 0 0 0;font-size:13px;color:#a8a8a8;">Some detail was left out because the message was too long.</p>{% endif %}
+{% endblock %}

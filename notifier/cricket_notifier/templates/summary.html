@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block body %}
+{% macro row(label, value) %}<tr><td style="padding:8px 14px 8px 0;border-bottom:1px solid #262626;color:#8c8c8c;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;vertical-align:top;width:190px;">{{ label }}</td><td style="padding:8px 0;border-bottom:1px solid #262626;color:#f2f2f2;vertical-align:top;">{{ value }}</td></tr>{% endmacro %}
+{% macro section(name) %}<h2 style="font-size:13px;letter-spacing:0.05em;text-transform:uppercase;color:#9a9a9a;margin:22px 0 6px 0;border-top:1px solid #2a2a2a;padding-top:14px;">{{ name }}</h2>{% endmacro %}
+{% if attention %}
+<div style="background:#2a1214;border:1px solid #c4313a;border-radius:10px;padding:10px 14px;margin:0 0 8px 0;"><strong>Needs attention</strong>
+<ul style="margin:6px 0 0 0;padding-left:20px;">
+{% for reason in attention %}<li>{{ reason }}</li>
+{% endfor %}
+</ul></div>
+{% else %}
+<div style="background:#112519;border:1px solid #3f7d4f;border-radius:10px;padding:10px 14px;margin:0 0 8px 0;"><strong>All normal.</strong> Nothing needs attention.</div>
+{% endif %}
+{{ section("Period") }}
+<p style="margin:0;">{{ period.start.local }}<br>to {{ period.end.local }}<br>Length {{ period.length }}. In UTC: {{ period.start.utc }} to {{ period.end.utc }}</p>
+{% if period.first_run_note %}<p>{{ period.first_run_note }}</p>{% endif %}
+{% if not prometheus_available %}<p><strong>Monitoring could not be read for this report, so the figures that come from it are shown as "no data".</strong></p>{% endif %}
+{{ section("Daily refresh") }}
+<p style="margin:0 0 6px 0;"><strong>{{ refresh.headline }}</strong></p>
+{% if refresh.get("times_note") %}<p style="margin:0 0 6px 0;color:#a8a8a8;">{{ refresh.times_note }}</p>{% endif %}
+<table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+{% if refresh.checked %}{{ row("Source check", refresh.checked) }}
+{{ row("New data", refresh.new_data) }}
+{% endif %}
+{{ row("Data now live", data.label ~ ", built " ~ (data.built or "unknown") ~ ((", " ~ data.age ~ " before the period ended") if data.age else "")) }}
+</table>
+{{ section("Traffic") }}
+<p style="margin:0 0 6px 0;color:#a8a8a8;">Requests that reached the server. Answers Cloudflare served from its cache are in Cloudflare's analytics.</p>
+<table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+{{ row("Requests", requests.total.text ~ (requests.total.marks | marks)) }}
+{{ row("Succeeded (2xx)", requests.by_status["2xx"].text ~ (requests.by_status["2xx"].marks | marks)) }}
+{{ row("Not modified (3xx)", requests.by_status["3xx"].text ~ (requests.by_status["3xx"].marks | marks)) }}
+{{ row("Client errors (4xx)", requests.by_status["4xx"].text ~ (requests.by_status["4xx"].marks | marks)) }}
+{{ row("Server errors (5xx)", requests.by_status["5xx"].text ~ (requests.by_status["5xx"].marks | marks)) }}
+{{ row("Dropped, no answer", requests.by_status["aborted"].text ~ (requests.by_status["aborted"].marks | marks)) }}
+{{ row("Turned away", requests.rate_limited.text ~ " for too many requests (429); refused because the server was busy: light " ~ admission.light.text ~ ", medium " ~ admission.medium.text ~ ", heavy " ~ admission.heavy.text) }}
+{{ row("Response time", latency.plain ~ (latency.marks | marks)) }}
+{{ row("Errors inside the server", faults.total.text ~ (faults.total.marks | marks) ~ "; queries stopped for taking too long " ~ faults.query_timeouts.text) }}
+</table>
+{{ section("Server") }}
+<table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+{{ row("Memory", (resources.memory_peak.text | replace(" (highest observed)", "")) ~ " at its highest, of " ~ resources.memory_limit.text ~ ((" (" ~ resources.memory_percent ~ " percent)") if resources.memory_percent is not none else "")) }}
+{{ row("Restarts", resources.restarts.text ~ "; killed for lack of memory " ~ resources.oom_kills.text ~ "; running for " ~ resources.uptime.text) }}
+{{ row("Disk", "no data" if disk.free_percent is none else (disk.free_percent ~ " percent free (" ~ disk.free ~ " of " ~ disk.total ~ ")")) }}
+{{ row("Monitoring", "no data" if coverage is none else (coverage ~ " percent of the expected readings were present")) }}
+</table>
+{{ section("Alerts") }}
+<p style="margin:0;">Fired {{ alerts.fired }}, recovered {{ alerts.recovered }}</p>
+<ul style="margin:6px 0;">
+{% for name, n in alerts.fired_names %}<li>fired: {{ name }} ({{ n }})</li>
+{% endfor %}
+{% for name, n in alerts.recovered_names %}<li>recovered: {{ name }} ({{ n }})</li>
+{% endfor %}
+</ul>
+{{ section("Email and bandwidth") }}
+<table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+{{ row("Email sent", email.accepted ~ ". Failed " ~ email.failed ~ ", unconfirmed " ~ email.unconfirmed ~ ", held back " ~ email.budget_suppressed ~ ", expired " ~ email.expired) }}
+{{ row("Email allowance", "today " ~ email.day_used.used ~ " of " ~ email.day_used.cap ~ ", this month " ~ email.month_used.used ~ " of " ~ email.month_used.cap ~ ((" (Resend counts " ~ email.account_month ~ " this month)") if email.account_month is not none else "")) }}
+{{ row("Data sent out", bandwidth.period.text ~ " this period, " ~ bandwidth.month.text ~ " this month, of " ~ bandwidth.allowance ~ " (public interface, counted in whole UTC hours)") }}
+{% for slot in email.skipped_slots %}{{ row("Skipped report", slot ~ " (outside the catch-up window)") }}
+{% endfor %}
+</table>
+{% if shown_notes %}
+{{ section("Notes (why a figure above may be incomplete)") }}
+<ul style="margin:6px 0;">
+{% for note in shown_notes %}<li>{{ note }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if shrunk %}<p>Some detail was left out because the message was too long.</p>{% endif %}
+{% endblock %}

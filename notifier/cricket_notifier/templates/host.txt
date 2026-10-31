@@ -1,0 +1,14 @@
+{% extends "base.txt" %}
+{% block body %}
+{% if state == "low" %}
+Free disk space is low: {{ free_percent }} percent free ({{ free }} of {{ total }}) on {{ path }}.
+This check is made by the notifier itself, so it does not depend on Prometheus being able to write.
+Look at what is using the disk before it fills.
+{% else %}
+Free disk space is back to {{ free_percent }} percent ({{ free }} of {{ total }}) on {{ path }}.
+{% endif %}
+{% if shrunk %}
+
+Some detail was left out because the message was too long.
+{% endif %}
+{% endblock %}

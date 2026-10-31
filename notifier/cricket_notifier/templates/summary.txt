@@ -1,0 +1,82 @@
+{% extends "base.txt" %}
+{% block body %}
+{% if attention %}
+NEEDS ATTENTION
+{% for reason in attention %}
+  - {{ reason }}
+{% endfor %}
+{% else %}
+ALL NORMAL. Nothing needs attention.
+{% endif %}
+
+PERIOD
+  {{ period.start.local }}
+  to {{ period.end.local }}
+  Length {{ period.length }}. In UTC: {{ period.start.utc }} to {{ period.end.utc }}
+{% if period.first_run_note %}
+  {{ period.first_run_note }}
+{% endif %}
+{% if not prometheus_available %}
+
+Monitoring could not be read for this report, so the figures that come from it are shown as "no data".
+{% endif %}
+
+DAILY REFRESH
+  {{ refresh.headline }}
+{% if refresh.get("times_note") %}  {{ refresh.times_note }}
+{% endif %}{% if refresh.checked %}
+  {{ refresh.checked }}
+  {{ refresh.new_data }}
+{% endif %}
+  Data now live     {{ data.label }}, built {{ data.built or "unknown" }}{% if data.age %}, {{ data.age }} before the period ended{% endif %}
+
+
+TRAFFIC (requests that reached the server; answers Cloudflare served from its cache are in Cloudflare's analytics)
+  Requests            {{ requests.total.text }}{{ requests.total.marks | marks }}
+    succeeded (2xx)   {{ requests.by_status["2xx"].text }}{{ requests.by_status["2xx"].marks | marks }}
+    not modified (3xx) {{ requests.by_status["3xx"].text }}{{ requests.by_status["3xx"].marks | marks }}
+    client errors (4xx) {{ requests.by_status["4xx"].text }}{{ requests.by_status["4xx"].marks | marks }}
+    server errors (5xx) {{ requests.by_status["5xx"].text }}{{ requests.by_status["5xx"].marks | marks }}
+    dropped, no answer {{ requests.by_status["aborted"].text }}{{ requests.by_status["aborted"].marks | marks }}
+  Turned away         {{ requests.rate_limited.text }} for too many requests (429); refused because the server was busy: light {{ admission.light.text }}, medium {{ admission.medium.text }}, heavy {{ admission.heavy.text }}
+  Response time       {{ latency.plain }}{{ latency.marks | marks }}
+  Errors inside the server  {{ faults.total.text }}{{ faults.total.marks | marks }}; queries stopped for taking too long {{ faults.query_timeouts.text }}
+
+SERVER
+  Memory              {{ resources.memory_peak.text | replace(" (highest observed)", "") }} at its highest, of {{ resources.memory_limit.text }}{% if resources.memory_percent is not none %} ({{ resources.memory_percent }} percent){% endif %}
+
+  Restarts            {{ resources.restarts.text }}; killed for lack of memory {{ resources.oom_kills.text }}; running for {{ resources.uptime.text }}
+  Disk                {% if disk.free_percent is none %}no data{% else %}{{ disk.free_percent }} percent free ({{ disk.free }} of {{ disk.total }}){% endif %}
+
+  Monitoring          {% if coverage is none %}no data{% else %}{{ coverage }} percent of the expected readings were present{% endif %}
+
+
+ALERTS
+  Fired {{ alerts.fired }}, recovered {{ alerts.recovered }}
+{% for name, n in alerts.fired_names %}
+    fired      {{ name }} ({{ n }})
+{% endfor %}
+{% for name, n in alerts.recovered_names %}
+    recovered  {{ name }} ({{ n }})
+{% endfor %}
+
+EMAIL AND BANDWIDTH
+  Email sent          {{ email.accepted }}. Failed {{ email.failed }}, unconfirmed {{ email.unconfirmed }}, held back {{ email.budget_suppressed }}, expired {{ email.expired }}
+  Email allowance     today {{ email.day_used.used }} of {{ email.day_used.cap }}, this month {{ email.month_used.used }} of {{ email.month_used.cap }}{% if email.account_month is not none %} (Resend counts {{ email.account_month }} this month){% endif %}
+
+  Data sent out       {{ bandwidth.period.text }} this period, {{ bandwidth.month.text }} this month, of {{ bandwidth.allowance }} (public interface, counted in whole UTC hours)
+{% for slot in email.skipped_slots %}
+  Skipped report      {{ slot }} (outside the catch-up window)
+{% endfor %}
+{% if shown_notes %}
+
+NOTES (why a figure above may be incomplete)
+{% for note in shown_notes %}
+  - {{ note }}
+{% endfor %}
+{% endif %}
+{% if shrunk %}
+
+Some detail was left out because the message was too long.
+{% endif %}
+{% endblock %}
