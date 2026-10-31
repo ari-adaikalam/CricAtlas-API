@@ -19,7 +19,7 @@ A read-only API over ball-by-ball cricket data. Ask it for a match scorecard, a 
 - **Prometheus, Grafana and Alertmanager**: private monitoring, with an email when something looks wrong.
 - **pytest**: about 3,000 tests, including scorecards checked against real matches.
 - **Claude (Sonnet 5.5, medium effort)**: did all of the implementation.
-- **Codex**: planned the project and made the decisions together with me, then reviewed each step for the code and for whether it met the requirements.
+- **Codex (GPT-6.1 Sol, high effort)**: planned the project and made the decisions together with me, then reviewed each step for the code and for whether it met the requirements.
 - **VibeSec Pro**: the security check ran on each step, from [vibesec.sh](https://vibesec.sh).
 
 ## What You Can Ask It
