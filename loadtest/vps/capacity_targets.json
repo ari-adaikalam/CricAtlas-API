@@ -1,0 +1,16 @@
+{
+  "recorded": "2026-10-12, before any capacity run, on the owner's instruction. They are not derived from any capacity measurement and are not to be widened after results are seen: a change is recorded as a change, with the reason.",
+  "p99_ms": {"light": 500, "medium": 4000, "heavy": 8000},
+  "success_min_pct": {"light": 99, "medium": 99},
+  "heavy": "success and refusals are reported separately, by kind, in every phase and every repeat. There is no pass or fail threshold on heavy success; heavy p99 is judged.",
+  "health": {"success_pct": 100, "p99_ms": 500},
+  "min_samples_per_class": 100,
+  "min_samples_note": "A success rate or a p99 is judged only when the class has at least this many requests in the phase. Fewer is reported as UNJUDGED with the count, and an unjudged class cannot make a rate pass. The short ladder cannot judge medium or heavy at low rates, which is why it only locates the knee. Only a longer confirmation run at the candidate rate, with every class at or above the minimum, can establish 'sustainable'.",
+  "repeats_min": 3,
+  "confirmation": {"seconds": 1200, "repeats": 1, "recovery_idle_seconds": 60},
+  "unchanged": {
+    "host_available_min_mib": 600, "api_memory_max_mib": 2090, "root_free_min_gb": 8, "memory_pressure_full_max_pct": 10, "memory_pressure_sustain_s": 60, "volume_used_max_pct": 90, "readiness_failures_in_a_row": 3,
+    "no_oom": true, "no_restart": true, "memory_plateau": "the API's anonymous memory after the last repeat is within 10 percent of the first",
+    "recovery": "30 s after the load stops the admission queues are empty"
+  }
+}

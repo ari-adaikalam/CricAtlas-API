@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<title>{% block title %}{{ title }}{% endblock %}</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f4f2;">
+{# The CricAtlas look from the app, the documentation and the monitoring page: a dark card with a dark-red header, the red-and-white wordmark and the brand red #c4313a as the line under it.
+   The one image is the ball, a small PNG on our own site (web/public/brand/icons). It is the only thing the message fetches; where it is blocked the tile stays dark red. No web font is fetched: Outfit is used where the reader has it. #}
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#f4f4f2;">
+<tr><td align="center" style="padding:24px 12px;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:separate;max-width:620px;background:#141414;border-radius:14px;overflow:hidden;font-family:Outfit,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;color:#f2f2f2;">
+<tr>
+<td style="background:#1f0b0d;border-bottom:3px solid #c4313a;padding:22px 28px 20px 28px;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+<tr>
+<td style="vertical-align:middle;white-space:nowrap;"><a href="https://cricatlas.ariadaikalam.com/" style="text-decoration:none;color:#ffffff;"><img src="https://cricatlas.ariadaikalam.com/brand/icons/icon-A-leather-88.png" width="28" height="28" alt="" style="border:0;width:28px;height:28px;vertical-align:middle;margin-right:2px;"><span style="font-size:18px;font-weight:700;color:#ffffff;vertical-align:middle;">Cric<span style="color:#c4313a;">Atlas</span></span></a><span style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#a8a8a8;vertical-align:middle;padding-left:14px;">API operations</span></td>
+<td align="right" style="vertical-align:middle;"><span style="display:inline-block;border:1px solid #ebc862;border-radius:999px;padding:2px 10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#ebc862;">Private</span></td>
+</tr>
+</table>
+<h1 style="font-size:19px;line-height:1.3;font-weight:700;margin:18px 0 0 0;color:#ffffff;">{% block heading %}{{ title | replace(prefix ~ " ", "", 1) }}{% endblock %}</h1>
+</td>
+</tr>
+<tr>
+<td style="padding:18px 28px 26px 28px;color:#f2f2f2;">
+{% block body %}{% endblock %}
+</td>
+</tr>
+<tr>
+<td style="border-top:1px solid #2a2a2a;padding:16px 28px;font-size:12px;line-height:1.5;color:#8c8c8c;">{{ footer }}</td>
+</tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>

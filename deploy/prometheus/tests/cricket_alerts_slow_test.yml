@@ -1,0 +1,24 @@
+# Alert cases that need weeks of simulated time, so they are evaluated at a coarse interval (the rules do not depend on the interval for these).
+rule_files:
+  - ../rules/cricket_alerts.yml
+
+evaluation_interval: 4m
+
+tests:
+  - name: the data is older than 21 days
+    interval: 4m
+    input_series:
+      - series: 'cricket_api_data_built_timestamp_seconds'
+        values: '1000x9000'
+    alert_rule_test:
+      - eval_time: 10d
+        alertname: ApiDataStale
+        exp_alerts: []
+      - eval_time: 23d
+        alertname: ApiDataStale
+        exp_alerts:
+          - exp_labels: {severity: info}
+            exp_annotations:
+              summary: The data being served was built more than 21 days ago
+              description: The 21 days is provisional until the release cadence is set.
+

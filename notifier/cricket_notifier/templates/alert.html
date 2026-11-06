@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+<p style="margin:0 0 12px 0;">{{ count }} alert{{ "s" if count != 1 else "" }} firing{% if started %}, the first since {{ started }}{% endif %}.</p>
+{% for a in alerts %}
+{% set tone = "#5a9a5a" if a.state == "resolved" else ("#c4313a" if a.severity in ("critical", "high", "page") else ("#ebc862" if a.severity == "warning" else "#a8a8a8")) %}
+<div style="border-left:4px solid {{ tone }};background:#1e1e1e;border:1px solid #2a2a2a;border-radius:0 8px 8px 0;padding:9px 12px;margin:0 0 8px 0;">
+<strong>{{ a.name }}</strong>{% if a.severity %} <span style="display:inline-block;border:1px solid {{ tone }};border-radius:999px;padding:0 8px;font-size:11px;color:#d8d8d8;">{{ a.severity }}</span>{% endif %}{% if a.state == "resolved" %} <span style="display:inline-block;border:1px solid #5a9a5a;border-radius:999px;padding:0 8px;font-size:11px;color:#8fd19a;">resolved</span>{% endif %}
+{% if a.summary %}<div>{{ a.summary }}</div>{% endif %}
+{% if a.description %}<div style="color:#a8a8a8;">{{ a.description }}</div>{% endif %}
+{% if a.started %}<div style="color:#a8a8a8;font-size:13px;">Since {{ a.started }}</div>{% endif %}
+</div>
+{% endfor %}
+{% if more %}<p style="margin:10px 0 0 0;color:#a8a8a8;">And {{ more }} more not listed here.</p>{% endif %}
+{% if shrunk %}<p style="margin:12px 0 0 0;font-size:13px;color:#a8a8a8;">Some detail was left out because the message was too long.</p>{% endif %}
+{% endblock %}

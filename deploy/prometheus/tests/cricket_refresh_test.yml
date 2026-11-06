@@ -1,0 +1,70 @@
+rule_files:
+  - ../rules/cricket_refresh.yml
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    input_series:
+      - series: cricket_data_refresh_enabled
+        values: 1x10
+      - series: cricket_data_refresh_failed
+        values: 1x10
+      - series: cricket_data_refresh_pending
+        values: 0x10
+      - series: cricket_data_refresh_last_check_seconds
+        values: 0+60x10
+      - series: cricket_data_refresh_observed_seconds
+        values: 0+60x10
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: DataRefreshFailed
+        exp_alerts:
+          - exp_labels: {severity: warning, family: data_refresh}
+            exp_annotations:
+              summary: The automatic data refresh needs attention
+              description: Preparation or publication failed, or the transaction needs recovery. Read the private service journal and data-activation.json. Do not restart the API blindly.
+  - interval: 1m
+    input_series:
+      - series: cricket_data_refresh_enabled
+        values: 0x20
+      - series: cricket_data_refresh_failed
+        values: 1x20
+      - series: cricket_data_refresh_pending
+        values: 1x20
+      - series: cricket_data_refresh_last_check_seconds
+        values: 0x20
+      - series: cricket_data_refresh_observed_seconds
+        values: 0x20
+    alert_rule_test:
+      - {eval_time: 20m, alertname: DataRefreshFailed, exp_alerts: []}
+      - {eval_time: 20m, alertname: DataRefreshPending, exp_alerts: []}
+      - {eval_time: 20m, alertname: DataRefreshStale, exp_alerts: []}
+  - interval: 1m
+    input_series:
+      - series: cricket_data_refresh_enabled
+        values: 1x10
+      - series: cricket_data_refresh_pending
+        values: 1x10
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: DataRefreshPending
+        exp_alerts:
+          - exp_labels: {severity: warning, family: data_refresh}
+            exp_annotations:
+              summary: Data publication has unfinished cache or public checks
+              description: A verified snapshot may already be live. Resume the recorded publication rather than deploying or restarting again.
+  - interval: 1m
+    input_series:
+      - series: cricket_data_refresh_enabled
+        values: 1x60
+      - series: cricket_data_refresh_last_check_seconds
+        values: 0x60
+      - series: cricket_data_refresh_observed_seconds
+        values: 0x60
+    alert_rule_test:
+      - eval_time: 60m
+        alertname: DataRefreshStale
+        exp_alerts:
+          - exp_labels: {severity: warning, family: data_refresh}
+            exp_annotations:
+              summary: Daily source checking or its observer is overdue
+              description: No successful source check in 36 hours, or no observer reading in 30 minutes. This is not proof of missing new matches at Cricsheet.

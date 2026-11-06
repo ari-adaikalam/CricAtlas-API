@@ -1,0 +1,24 @@
+groups:
+  - name: cricket_data_refresh
+    rules:
+      - alert: DataRefreshFailed
+        expr: cricket_data_refresh_enabled == 1 and cricket_data_refresh_failed == 1
+        for: 5m
+        labels: {severity: warning, family: data_refresh}
+        annotations:
+          summary: The automatic data refresh needs attention
+          description: Preparation or publication failed, or the transaction needs recovery. Read the private service journal and data-activation.json. Do not restart the API blindly.
+      - alert: DataRefreshPending
+        expr: cricket_data_refresh_enabled == 1 and cricket_data_refresh_pending == 1
+        for: 5m
+        labels: {severity: warning, family: data_refresh}
+        annotations:
+          summary: Data publication has unfinished cache or public checks
+          description: A verified snapshot may already be live. Resume the recorded publication rather than deploying or restarting again.
+      - alert: DataRefreshStale
+        expr: cricket_data_refresh_enabled == 1 and (time() - cricket_data_refresh_last_check_seconds > 36 * 3600 or time() - cricket_data_refresh_observed_seconds > 1800)
+        for: 15m
+        labels: {severity: warning, family: data_refresh}
+        annotations:
+          summary: Daily source checking or its observer is overdue
+          description: No successful source check in 36 hours, or no observer reading in 30 minutes. This is not proof of missing new matches at Cricsheet.

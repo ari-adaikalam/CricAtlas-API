@@ -1,0 +1,5 @@
+# What the API image installs besides the package itself. Versions are the ones the tests ran against (api/tests, 2026-10).
+# Regenerate requirements.txt with api/deploy/local/lock_requirements.sh after changing this file.
+duckdb==1.5.6
+fastapi==0.143.0
+uvicorn==0.54.0

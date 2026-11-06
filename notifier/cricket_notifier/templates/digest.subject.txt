@@ -1,0 +1,1 @@
+{{ prefix }} Digest: {% if held %}{{ held }} alert message{{ "s" if held != 1 else "" }} held while email was failing{% else %}incidents while email was failing could not be kept{% endif %}
