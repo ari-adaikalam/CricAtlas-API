@@ -1,0 +1,25 @@
+{% extends "base.txt" %}
+{% block body %}
+{{ headline }} {{ meaning }}
+
+{% for label, value in rows %}
+{{ label }}: {{ value }}
+{% endfor %}
+{% if phases %}
+
+Time by phase:
+{% for phase in phases %}
+  {{ phase.name }}: {{ phase.time }}
+{% endfor %}
+{% endif %}
+{% if journal_phase %}
+
+Publication journal: {{ journal_phase }}.
+{% endif %}
+
+Attempt {{ attempt }}. One message per refresh attempt. The 9 pm summary is separate.
+{% if shrunk %}
+
+Some detail was left out because the message was too long.
+{% endif %}
+{% endblock %}

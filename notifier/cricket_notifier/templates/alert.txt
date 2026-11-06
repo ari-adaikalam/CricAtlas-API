@@ -1,0 +1,23 @@
+{% extends "base.txt" %}
+{% block body %}
+{{ count }} alert{{ "s" if count != 1 else "" }} firing{% if started %}, the first since {{ started }}{% endif %}.
+{% for a in alerts %}
+
+{{ a.name }}{% if a.severity %} ({{ a.severity }}){% endif %}{% if a.state == "resolved" %}, resolved{% endif %}
+
+{% if a.summary %}  {{ a.summary }}
+{% endif %}
+{% if a.description %}  {{ a.description }}
+{% endif %}
+{% if a.started %}  Since {{ a.started }}
+{% endif %}
+{% endfor %}
+{% if more %}
+
+And {{ more }} more not listed here.
+{% endif %}
+{% if shrunk %}
+
+Some detail was left out because the message was too long.
+{% endif %}
+{% endblock %}

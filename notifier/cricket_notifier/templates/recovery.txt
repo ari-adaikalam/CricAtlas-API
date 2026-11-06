@@ -1,0 +1,23 @@
+{% extends "base.txt" %}
+{% block body %}
+{{ count }} alert{{ "s" if count != 1 else "" }} resolved{% if duration %} after {{ duration }}{% endif %}.
+{% if started %}First started {{ started }}
+{% endif %}
+{% if ended %}Last ended   {{ ended }}
+{% endif %}
+{% for a in alerts %}
+
+{{ a.name }}{% if a.severity %} ({{ a.severity }}){% endif %}
+
+{% if a.summary %}  {{ a.summary }}
+{% endif %}
+{% endfor %}
+{% if more %}
+
+And {{ more }} more not listed here.
+{% endif %}
+{% if shrunk %}
+
+Some detail was left out because the message was too long.
+{% endif %}
+{% endblock %}

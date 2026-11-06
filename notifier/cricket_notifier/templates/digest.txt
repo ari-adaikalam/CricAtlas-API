@@ -1,0 +1,44 @@
+{% extends "base.txt" %}
+{% block body %}
+Email sending is working again.{% if held %} While it was failing, {{ held }} alert and recovery message{{ "s" if held != 1 else "" }} were held back or went stale before they could be sent, and this one message replaces them.{% else %} While it was failing, alert and recovery messages were held back or went stale, and none of their details could be kept.{% endif %}
+{% if dropped %}{{ dropped }} earlier incident{{ "s" if dropped != 1 else "" }} could not be kept and {{ "are" if dropped != 1 else "is" }} not listed.
+{% endif %}
+{% if opened %}Held from {{ opened }}
+{% endif %}
+{% if closed %}Working again {{ closed }}
+{% endif %}
+
+STILL FIRING
+{% for name in still_firing %}
+  {{ name }}
+{% else %}
+  Nothing is known to be firing.
+{% endfor %}
+{% if more_still %}
+  And {{ more_still }} more.
+{% endif %}
+
+FIRED WHILE HELD
+{% for name, n in fired %}
+  {{ name }} ({{ n }})
+{% else %}
+  None.
+{% endfor %}
+{% if more_fired %}
+  And {{ more_fired }} more.
+{% endif %}
+
+RESOLVED WHILE HELD
+{% for name, n in resolved %}
+  {{ name }} ({{ n }})
+{% else %}
+  None.
+{% endfor %}
+{% if more_resolved %}
+  And {{ more_resolved }} more.
+{% endif %}
+{% if shrunk %}
+
+Some detail was left out because the message was too long.
+{% endif %}
+{% endblock %}

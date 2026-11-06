@@ -1,0 +1,38 @@
+# Prometheus: scrapes the API's private metrics listener, the notifier, the host (node_exporter) and itself, evaluates the recording and alert rules, and hands alerts to Alertmanager.
+# Addresses are fixed in compose.yaml (the `monitor` network is internal and has a fixed subnet), and a test checks they agree.
+global:
+  # The notifier's summary reads recorded samples at this spacing (its [prometheus] scrape_interval_seconds is 15), so the two are changed together.
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
+      timeout: 10s
+
+scrape_configs:
+  # Job names are read by other parts: the notifier reads process_start_time_seconds{job="cricket-api"} and node_*{job="node"}, and the rules and the dashboard use both.
+  - job_name: cricket-api
+    static_configs:
+      - targets: ["172.30.20.10:9100"]
+  - job_name: node
+    static_configs:
+      - targets: ["172.30.20.1:9100"]
+  - job_name: cricket-notifier
+    static_configs:
+      - targets: ["172.30.20.20:9096"]
+  - job_name: alertmanager
+    static_configs:
+      - targets: ["alertmanager:9093"]
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+  # Grafana's own metrics (unauthenticated on its internal address): its memory, its start time (a restart shows as a change), and whether it is up. It was the one container nothing watched.
+  - job_name: grafana
+    static_configs:
+      - targets: ["172.30.20.30:3000"]

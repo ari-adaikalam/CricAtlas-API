@@ -1,0 +1,1 @@
+{{ prefix }} ALERT: {{ group_name }}{% if count > 1 %} ({{ count }} firing){% endif %}

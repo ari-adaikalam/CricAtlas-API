@@ -1,0 +1,14 @@
+# Python and test scratch
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Local environment and secrets
+.venv/
+.env
+
+# Local data (the repository carries only the small test cut in tests/golden)
+/data/
+
+.DS_Store

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block body %}
+{% if state == "low" %}
+<div style="background:#2a1214;border:1px solid #c4313a;border-radius:10px;padding:10px 14px;margin:0 0 10px 0;"><strong>Free disk space is low:</strong> {{ free_percent }} percent free ({{ free }} of {{ total }}) on {{ path }}.</div>
+<p style="margin:0;">This check is made by the notifier itself, so it does not depend on Prometheus being able to write. Look at what is using the disk before it fills.</p>
+{% else %}
+<div style="background:#112519;border:1px solid #3f7d4f;border-radius:10px;padding:10px 14px;margin:0;"><strong>Free disk space is back</strong> to {{ free_percent }} percent ({{ free }} of {{ total }}) on {{ path }}.</div>
+{% endif %}
+{% if shrunk %}<p style="margin:12px 0 0 0;font-size:13px;color:#a8a8a8;">Some detail was left out because the message was too long.</p>{% endif %}
+{% endblock %}

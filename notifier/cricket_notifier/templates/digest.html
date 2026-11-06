@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+<div style="background:#112519;border:1px solid #3f7d4f;border-radius:10px;padding:10px 14px;margin:0 0 8px 0;"><strong>Email sending is working again.</strong></div>
+<p style="margin:0 0 6px 0;">{% if held %}While it was failing, {{ held }} alert and recovery message{{ "s" if held != 1 else "" }} were held back or went stale before they could be sent, and this one message replaces them.{% else %}While it was failing, alert and recovery messages were held back or went stale, and none of their details could be kept.{% endif %}</p>
+{% if dropped %}<p style="margin:0 0 6px 0;">{{ dropped }} earlier incident{{ "s" if dropped != 1 else "" }} could not be kept and {{ "are" if dropped != 1 else "is" }} not listed.</p>{% endif %}
+{% if opened %}<div style="color:#a8a8a8;font-size:13px;">Held from {{ opened }}</div>{% endif %}
+{% if closed %}<div style="color:#a8a8a8;font-size:13px;">Working again {{ closed }}</div>{% endif %}
+<h2 style="font-size:13px;letter-spacing:0.05em;text-transform:uppercase;color:#9a9a9a;margin:22px 0 6px 0;border-top:1px solid #2a2a2a;padding-top:14px;">Still firing</h2>
+<ul style="margin:4px 0;padding-left:20px;">{% for name in still_firing %}<li>{{ name }}</li>{% else %}<li>Nothing is known to be firing.</li>{% endfor %}{% if more_still %}<li>And {{ more_still }} more.</li>{% endif %}</ul>
+<h2 style="font-size:13px;letter-spacing:0.05em;text-transform:uppercase;color:#9a9a9a;margin:22px 0 6px 0;border-top:1px solid #2a2a2a;padding-top:14px;">Fired while held</h2>
+<ul style="margin:4px 0;padding-left:20px;">{% for name, n in fired %}<li>{{ name }} ({{ n }})</li>{% else %}<li>None.</li>{% endfor %}{% if more_fired %}<li>And {{ more_fired }} more.</li>{% endif %}</ul>
+<h2 style="font-size:13px;letter-spacing:0.05em;text-transform:uppercase;color:#9a9a9a;margin:22px 0 6px 0;border-top:1px solid #2a2a2a;padding-top:14px;">Resolved while held</h2>
+<ul style="margin:4px 0;padding-left:20px;">{% for name, n in resolved %}<li>{{ name }} ({{ n }})</li>{% else %}<li>None.</li>{% endfor %}{% if more_resolved %}<li>And {{ more_resolved }} more.</li>{% endif %}</ul>
+{% if shrunk %}<p style="margin:12px 0 0 0;font-size:13px;color:#a8a8a8;">Some detail was left out because the message was too long.</p>{% endif %}
+{% endblock %}

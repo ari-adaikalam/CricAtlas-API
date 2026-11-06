@@ -1,0 +1,1203 @@
+# Unit tests for the alert rules, run with `promtool test rules` against synthetic series. Each case says what must fire and, as important, what must not.
+rule_files:
+  - ../rules/cricket_alerts.yml
+
+evaluation_interval: 15s
+
+tests:
+  - name: the API stops answering its scrape
+    interval: 15s
+    input_series:
+      - series: 'up{job="cricket-api", instance="172.30.20.10:9100"}'
+        values: '1x20 0x30'
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: ApiDown
+        exp_alerts: []
+      - eval_time: 9m
+        alertname: ApiDown
+        exp_alerts:
+          - exp_labels: {severity: critical, job: cricket-api, instance: "172.30.20.10:9100"}
+            exp_annotations:
+              summary: The API has not answered its metrics scrape for 2 minutes
+              description: The API process may be down or hung. UptimeRobot checks it independently from outside.
+
+  - name: a healthy API with a few errors fires nothing
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+9x120'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="500"}'
+        values: '0+0.05x120'
+    alert_rule_test:
+      - eval_time: 25m
+        alertname: Api5xxRateHigh
+        exp_alerts: []
+
+  - name: server errors above one percent with real traffic fire, and a single stray request does not
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+9x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="500"}'
+        values: '0+1x240'
+      - series: 'cricket_api_requests_total{route="/v1/a", status="500"}'
+        values: '0x240'
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: Api5xxRateHigh
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: More than 1 percent of requests are unexpected server errors
+              description: Server errors other than overload refusals and query time limit stops, above 1 percent for 5 minutes, with at least about 3 requests a minute. The fault log has the request ids.
+
+  - name: no traffic at all is not an error rate
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/v1/x", status="500"}'
+        values: '3x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '7x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: Api5xxRateHigh
+        exp_alerts: []
+
+  - name: disk used at 60 percent is a warning only
+    interval: 1m
+    input_series:
+      - series: 'node_filesystem_size_bytes{mountpoint="/", fstype="ext4"}'
+        values: '100000000000x60'
+      - series: 'node_filesystem_avail_bytes{mountpoint="/", fstype="ext4"}'
+        values: '40000000000x60'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: DiskUsedWarning
+        exp_alerts:
+          - exp_labels: {severity: warning, family: disk_used, mountpoint: "/", fstype: ext4}
+            exp_annotations:
+              summary: The host disk is more than 55 percent used
+              description: The disk budget plans for about 42 percent, so something is not bounded.
+      - eval_time: 30m
+        alertname: DiskUsedHigh
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: DiskUsedCritical
+        exp_alerts: []
+
+  - name: a disk draining quickly is forecast to fill within a day
+    interval: 5m
+    input_series:
+      - series: 'node_filesystem_avail_bytes{mountpoint="/", fstype="ext4"}'
+        values: '30000000000-250000000x80'
+      - series: 'node_filesystem_size_bytes{mountpoint="/", fstype="ext4"}'
+        values: '40000000000x80'
+    alert_rule_test:
+      - eval_time: 6h
+        alertname: DiskFillsWithin24Hours
+        exp_alerts:
+          - exp_labels: {severity: high, family: disk_forecast, mountpoint: "/", fstype: ext4}
+            exp_annotations:
+              summary: If the last 6 hours' trend continued, the host disk would be full within 24 hours
+              description: "The disk is past 55 percent used, which the plan and one refresh run do not explain. A build or a cleanup can bend a straight-line forecast, so check the free space and what is growing first."
+
+  - name: a flat disk is not forecast to fill
+    interval: 5m
+    input_series:
+      - series: 'node_filesystem_avail_bytes{mountpoint="/", fstype="ext4"}'
+        values: '30000000000x400'
+    alert_rule_test:
+      - eval_time: 30h
+        alertname: DiskFillsWithin24Hours
+        exp_alerts: []
+      - eval_time: 30h
+        alertname: DiskFillsWithin7Days
+        exp_alerts: []
+
+  - name: the scratch volume above 70 percent, and a missing disk scan
+    interval: 1m
+    input_series:
+      - series: 'node_filesystem_size_bytes{mountpoint="/srv/cricket/scratch", fstype="ext4"}'
+        values: '2000000000x60'
+      - series: 'node_filesystem_avail_bytes{mountpoint="/srv/cricket/scratch", fstype="ext4"}'
+        values: '500000000x60'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ApiScratchHigh
+        exp_alerts:
+          - exp_labels: {severity: warning, mountpoint: /srv/cricket/scratch, fstype: ext4}
+            exp_annotations:
+              summary: The query scratch volume is more than 70 percent used
+              description: Queries are spilling to disk. The engine refuses a spill at its own cap before the volume is full.
+      - eval_time: 10m
+        alertname: DiskScanStale
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: The disk scan has not run for 30 minutes
+              description: The component sizes and the disk panel's budget bars are out of date.
+
+  - name: a recent disk scan is not stale
+    interval: 1m
+    input_series:
+      - series: 'cricket_disk_scan_timestamp_seconds'
+        values: '0+60x120'
+    alert_rule_test:
+      - eval_time: 90m
+        alertname: DiskScanStale
+        exp_alerts: []
+
+  - name: the notifier's own conditions
+    interval: 1m
+    input_series:
+      - series: 'cricket_notifier_summary_overdue_seconds'
+        values: '0x10 120x10'
+      - series: 'cricket_notifier_oldest_overshoot_seconds'
+        values: '0x20'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: NotifierSummaryOverdue
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: NotifierSummaryOverdue
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: A scheduled daily summary is overdue
+              description: Its time passed more than the grace period ago and it has not been accepted by Resend.
+      - eval_time: 15m
+        alertname: NotifierMessagePastDeadline
+        exp_alerts: []
+
+  - name: an ordinary quiet day raises none of the notifier's alerts
+    interval: 1m
+    input_series:
+      - series: 'cricket_notifier_summary_overdue_seconds'
+        values: '0x120'
+      - series: 'cricket_notifier_oldest_overshoot_seconds'
+        values: '0x120'
+      - series: 'cricket_notifier_failed_or_unconfirmed'
+        values: '0x120'
+      - series: 'cricket_notifier_storage_mode{mode="ok"}'
+        values: '1x120'
+      - series: 'cricket_notifier_storage_used_bytes'
+        values: '200000x120'
+      - series: 'cricket_notifier_breaker_state{state="closed"}'
+        values: '1x120'
+      - series: 'cricket_notifier_breaker_state{state="open"}'
+        values: '0x120'
+      - series: 'cricket_notifier_last_tick_timestamp_seconds'
+        values: '0+60x120'
+      - series: 'up{job="cricket-notifier"}'
+        values: '1x120'
+    alert_rule_test:
+      - eval_time: 100m
+        alertname: NotifierSummaryOverdue
+        exp_alerts: []
+      - eval_time: 100m
+        alertname: NotifierMessagePastDeadline
+        exp_alerts: []
+      - eval_time: 100m
+        alertname: NotifierFailedOrUnconfirmed
+        exp_alerts: []
+      - eval_time: 100m
+        alertname: NotifierStorageNearCap
+        exp_alerts: []
+      - eval_time: 100m
+        alertname: NotifierBreakerOpen
+        exp_alerts: []
+      - eval_time: 100m
+        alertname: NotifierStalled
+        exp_alerts: []
+      - eval_time: 100m
+        alertname: NotifierDown
+        exp_alerts: []
+
+  - name: the notifier ledger near its cap or refusing writes
+    interval: 1m
+    input_series:
+      - series: 'cricket_notifier_storage_mode{mode="low_priority_refused"}'
+        values: '1x30'
+      - series: 'cricket_notifier_storage_used_bytes'
+        values: '1000x30'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: NotifierStorageNearCap
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The notifier's ledger is near its cap or is refusing low-priority writes
+              description: The ledger volume is 64 MB with a 40 MB database cap.
+
+  - name: traffic allowance thresholds
+    interval: 1m
+    input_series:
+      - series: 'cricket_notifier_bandwidth_month_bytes'
+        values: '420000000000x30'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: BandwidthMonth50
+        exp_alerts:
+          - exp_labels: {severity: info, family: bandwidth}
+            exp_annotations:
+              summary: Half of the 500 GB monthly traffic allowance is used
+              description: At least this much, from the notifier's hourly record. The count includes SSH, updates and mail calls.
+      - eval_time: 10m
+        alertname: BandwidthMonth80
+        exp_alerts:
+          - exp_labels: {severity: warning, family: bandwidth}
+            exp_annotations:
+              summary: 80 percent of the 500 GB monthly traffic allowance is used
+              description: After the allowance the bandwidth is capped at 10 Mbps. Cache rules are the main lever.
+      - eval_time: 10m
+        alertname: BandwidthMonth95
+        exp_alerts: []
+
+  - name: the Cloudflare range list changed
+    interval: 1m
+    input_series:
+      - series: 'cricket_cloudflare_ranges_changed'
+        values: '0x120 1x180'
+      - series: 'cricket_cloudflare_check_timestamp_seconds'
+        values: '0+60x300'
+    alert_rule_test:
+      - eval_time: 2h
+        alertname: CloudflareRangesChanged
+        exp_alerts: []
+      - eval_time: 4h
+        alertname: CloudflareRangesChanged
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: Cloudflare's published address list differs from the live firewall or the current release
+              description: Review the new list, run api/deploy/local/update_cloudflare_ranges.py and deploy a release, which loads and verifies the firewall. Until then a new range is refused, not trusted.
+
+  - name: the API container near its memory limit
+    interval: 1m
+    input_series:
+      - series: 'cricket_api_cgroup_memory_bytes'
+        values: '2000000000x30'
+      - series: 'cricket_api_cgroup_memory_limit_bytes'
+        values: '2306867200x30'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: ApiMemoryHigh
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The API container uses more than 85 percent of its memory limit
+              description: Container memory includes page cache, which the kernel can reclaim. Compare with the dashboard's resident memory before acting.
+
+  - name: the API has no scrape target at all
+    interval: 1m
+    input_series:
+      - series: 'up{job="node", instance="172.30.20.1:9100"}'
+        values: '1x30'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: ApiNotScraped
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: ApiNotScraped
+        exp_alerts:
+          - exp_labels: {severity: critical, job: cricket-api}
+            exp_annotations:
+              summary: Prometheus has no scrape target for the API
+              description: The API target is missing from the scrape configuration or from service discovery.
+
+  - name: a process in the API container is killed for lack of memory
+    interval: 1m
+    input_series:
+      - series: 'cricket_api_cgroup_oom_kills_total'
+        values: '0x10 1x10'
+    alert_rule_test:
+      - eval_time: 8m
+        alertname: ApiOomKilled
+        exp_alerts: []
+      - eval_time: 14m
+        alertname: ApiOomKilled
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: A process in the API container was killed for lack of memory
+              description: The container's memory limit was hit.
+
+  - name: the host disk at 90 percent fires all three levels, at 80 only the lower two
+    interval: 1m
+    input_series:
+      - series: 'node_filesystem_size_bytes{mountpoint="/", fstype="ext4"}'
+        values: '100000000000x60'
+      - series: 'node_filesystem_avail_bytes{mountpoint="/", fstype="ext4"}'
+        values: '20000000000x30 10000000000x30'
+    alert_rule_test:
+      - eval_time: 25m
+        alertname: DiskUsedHigh
+        exp_alerts:
+          - exp_labels: {severity: high, family: disk_used, mountpoint: "/", fstype: ext4}
+            exp_annotations:
+              summary: The host disk is more than 70 percent used
+              description: Act this week.
+      - eval_time: 25m
+        alertname: DiskUsedCritical
+        exp_alerts: []
+      - eval_time: 55m
+        alertname: DiskUsedCritical
+        exp_alerts:
+          - exp_labels: {severity: critical, family: disk_used, mountpoint: "/", fstype: ext4}
+            exp_annotations:
+              summary: The host disk is more than 85 percent used
+              description: About 6 GB are left. Act now. The notifier also checks free space itself, without Prometheus.
+
+  - name: inodes above 80 percent
+    interval: 1m
+    input_series:
+      - series: 'node_filesystem_files{mountpoint="/", fstype="ext4"}'
+        values: '1000000x30'
+      - series: 'node_filesystem_files_free{mountpoint="/", fstype="ext4"}'
+        values: '150000x30'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: DiskInodesHigh
+        exp_alerts:
+          - exp_labels: {severity: warning, mountpoint: "/", fstype: ext4}
+            exp_annotations:
+              summary: More than 80 percent of the host's inodes are used
+              description: Many small files are being created.
+
+  - name: a fixed-size volume more than 80 percent used
+    interval: 1m
+    input_series:
+      - series: 'node_filesystem_size_bytes{mountpoint="/srv/cricket/ledger", fstype="ext4"}'
+        values: '85000000x30'
+      - series: 'node_filesystem_avail_bytes{mountpoint="/srv/cricket/ledger", fstype="ext4"}'
+        values: '10000000x30'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: DiskVolumeNearFull
+        exp_alerts:
+          - exp_labels: {severity: high, mountpoint: /srv/cricket/ledger, fstype: ext4}
+            exp_annotations:
+              summary: A fixed-size volume (scratch, ledger or Prometheus) is more than 80 percent used
+              description: Its owner stops when it is full. The mountpoint label says which.
+
+  - name: a slow leak is forecast to fill the disk within a week but not within a day
+    interval: 5m
+    input_series:
+      - series: 'node_filesystem_avail_bytes{mountpoint="/", fstype="ext4"}'
+        values: '60000000000-83333333x400'
+      - series: 'node_filesystem_size_bytes{mountpoint="/", fstype="ext4"}'
+        values: '100000000000x400'
+    alert_rule_test:
+      - eval_time: 30h
+        alertname: DiskFillsWithin24Hours
+        exp_alerts: []
+      - eval_time: 30h
+        alertname: DiskFillsWithin7Days
+        exp_alerts:
+          - exp_labels: {severity: warning, family: disk_forecast, mountpoint: "/", fstype: ext4}
+            exp_annotations:
+              summary: If the last 24 hours' trend continued, the host disk would be full within 7 days
+              description: "The disk is past 55 percent used, which the plan and one refresh run do not explain. A build or a cleanup can bend a straight-line forecast, so check the free space and what is growing first."
+
+  # The first refresh day on the real host (2026-10-28): free space flat at 27.4 GiB, a build and a deploy take it down to about 19 GiB in 6 hours, a cleanup gives some back, and it settles at 23 GiB.
+  # The old forecasts fired twice on this shape, with more than 18 GiB free. The disk never passes 55 percent used (38 GiB), so neither forecast may fire, at any point.
+  - name: a refresh run and its cleanup on a disk with room to spare raise no forecast
+    interval: 5m
+    input_series:
+      - series: 'node_filesystem_avail_bytes{mountpoint="/", fstype="ext4"}'
+        values: '29418000000x288 29418000000-140000000x71 19478000000x72 23800000000x72 24900000000x300'
+      - series: 'node_filesystem_size_bytes{mountpoint="/", fstype="ext4"}'
+        values: '40800000000x803'
+    alert_rule_test:
+      - eval_time: 26h
+        alertname: DiskFillsWithin24Hours
+        exp_alerts: []
+      - eval_time: 30h
+        alertname: DiskFillsWithin7Days
+        exp_alerts: []
+      - eval_time: 36h
+        alertname: DiskFillsWithin7Days
+        exp_alerts: []
+      - eval_time: 48h
+        alertname: DiskFillsWithin24Hours
+        exp_alerts: []
+      - eval_time: 48h
+        alertname: DiskFillsWithin7Days
+        exp_alerts: []
+
+  - name: a disk past 55 percent used and still falling is forecast, and the forecast names the free space
+    interval: 5m
+    input_series:
+      - series: 'node_filesystem_avail_bytes{mountpoint="/", fstype="ext4"}'
+        values: '16000000000-30000000x400'
+      - series: 'node_filesystem_size_bytes{mountpoint="/", fstype="ext4"}'
+        values: '40800000000x400'
+    alert_rule_test:
+      - eval_time: 30h
+        alertname: DiskFillsWithin7Days
+        exp_alerts:
+          - exp_labels: {severity: warning, family: disk_forecast, mountpoint: "/", fstype: ext4}
+            exp_annotations:
+              summary: If the last 24 hours' trend continued, the host disk would be full within 7 days
+              description: "The disk is past 55 percent used, which the plan and one refresh run do not explain. A build or a cleanup can bend a straight-line forecast, so check the free space and what is growing first."
+
+  - name: a part of the disk budget over its size
+    interval: 1m
+    input_series:
+      - series: 'cricket_disk_component_bytes{component="docker_images"}'
+        values: '5000000000x120'
+      - series: 'cricket_disk_component_budget_bytes{component="docker_images"}'
+        values: '4000000000x120'
+      - series: 'cricket_disk_component_bytes{component="journal"}'
+        values: '100000000x120'
+      - series: 'cricket_disk_component_budget_bytes{component="journal"}'
+        values: '400000000x120'
+    alert_rule_test:
+      - eval_time: 90m
+        alertname: DiskComponentOverBudget
+        exp_alerts:
+          - exp_labels: {severity: warning, component: docker_images}
+            exp_annotations:
+              summary: A part of the disk budget is over its size
+              description: The component label on the series says which. Either the budget is wrong or a limit failed.
+
+  - name: host metrics are not collected
+    interval: 1m
+    input_series:
+      - series: 'up{job="node", instance="172.30.20.1:9100"}'
+        values: '1x5 0x20'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: NodeExporterDown
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: NodeExporterDown
+        exp_alerts:
+          - exp_labels: {severity: high, job: node, instance: "172.30.20.1:9100"}
+            exp_annotations:
+              summary: Host metrics are not being collected
+              description: The disk, volume and bandwidth alerts and the summary's host figures depend on node_exporter.
+
+  - name: the Cloudflare check has never run
+    interval: 5m
+    input_series:
+      - series: 'up{job="node"}'
+        values: '1x40'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: CloudflareRangesCheckStale
+        exp_alerts: []
+      - eval_time: 3h
+        alertname: CloudflareRangesCheckStale
+        exp_alerts:
+          - exp_labels: {severity: info}
+            exp_annotations:
+              summary: The Cloudflare range check has not run for 10 days
+              description: It runs weekly from a systemd timer on the host.
+
+  - name: the traffic allowance at 80 and at 95 percent
+    interval: 1m
+    input_series:
+      - series: 'cricket_notifier_bandwidth_month_bytes'
+        values: '420000000000x15 490000000000x30'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: BandwidthMonth80
+        exp_alerts:
+          - exp_labels: {severity: warning, family: bandwidth}
+            exp_annotations:
+              summary: 80 percent of the 500 GB monthly traffic allowance is used
+              description: After the allowance the bandwidth is capped at 10 Mbps. Cache rules are the main lever.
+      - eval_time: 12m
+        alertname: BandwidthMonth95
+        exp_alerts: []
+      - eval_time: 40m
+        alertname: BandwidthMonth95
+        exp_alerts:
+          - exp_labels: {severity: high, family: bandwidth}
+            exp_annotations:
+              summary: 95 percent of the 500 GB monthly traffic allowance is used
+              description: The API will slow, not stop, when the allowance runs out.
+
+  - name: the notifier is down, stalled, holding mail or has messages to review
+    interval: 1m
+    input_series:
+      - series: 'up{job="cricket-notifier", instance="172.30.20.20:9096"}'
+        values: '1x5 0x30'
+      - series: 'cricket_notifier_last_tick_timestamp_seconds'
+        values: '0+60x10 600x25'
+      - series: 'cricket_notifier_failed_or_unconfirmed'
+        values: '0x5 2x30'
+      - series: 'cricket_notifier_breaker_state{state="open"}'
+        values: '0x5 1x30'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: NotifierDown
+        exp_alerts:
+          - exp_labels: {severity: critical, job: cricket-notifier, instance: "172.30.20.20:9096"}
+            exp_annotations:
+              summary: The notifier is not running
+              description: No email can be sent until it is back. UptimeRobot's own emails still work.
+      - eval_time: 30m
+        alertname: NotifierStalled
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The notifier's loop has not completed a pass for 5 minutes
+              description: It is running but not working through its steps.
+      - eval_time: 30m
+        alertname: NotifierFailedOrUnconfirmed
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: Messages are failed or unconfirmed and not reviewed
+              description: Run `python -m cricket_notifier status` in the container, then review or resend.
+      - eval_time: 30m
+        alertname: NotifierBreakerOpen
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: Email sending is failing and alert mail is being held
+              description: The circuit breaker is open. One probe goes out at a time, and a digest follows when it closes.
+
+  - name: Alertmanager is down, or Prometheus cannot find it
+    interval: 1m
+    input_series:
+      - series: 'up{job="alertmanager", instance="alertmanager:9093"}'
+        values: '1x5 0x20'
+      - series: 'prometheus_notifications_alertmanagers_discovered'
+        values: '1x5 0x20'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: AlertmanagerDown
+        exp_alerts:
+          - exp_labels: {severity: critical, job: alertmanager, instance: "alertmanager:9093"}
+            exp_annotations:
+              summary: Alertmanager is not running
+              description: No alert reaches the notifier until it is back.
+      - eval_time: 15m
+        alertname: PrometheusAlertmanagerUnreachable
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: Prometheus cannot find Alertmanager
+              description: Alerts are evaluated but not delivered.
+
+  - name: slow responses and refused requests, with traffic
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+10x240'
+      - series: 'cricket_api_request_duration_seconds_bucket{route="/v1/x", le="1.0"}'
+        values: '0x240'
+      - series: 'cricket_api_request_duration_seconds_bucket{route="/v1/x", le="2.5"}'
+        values: '0x240'
+      - series: 'cricket_api_request_duration_seconds_bucket{route="/v1/x", le="5.0"}'
+        values: '0+10x240'
+      - series: 'cricket_api_request_duration_seconds_bucket{route="/v1/x", le="+Inf"}'
+        values: '0+10x240'
+      - series: 'cricket_api_admission_total{class="heavy", outcome="refused_room"}'
+        values: '0+2x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ApiLatencyP95High
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: The 95th percentile of business request time is above 2 seconds
+              description: Provisional threshold. The query time limit is 5 seconds.
+      - eval_time: 30m
+        alertname: ApiAdmissionRefusalsSustained
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: The API has refused requests for lack of room for 10 minutes
+              description: Requests were refused because the admission rooms were full, the wait ran out or every query slot stayed taken. More than one every 10 seconds on average. This is overload, not a fault.
+
+  - name: overload is not a fault, and a fault during overload still is
+    interval: 15s
+    input_series:
+      # the ladder's pattern: 10 requests a second answered, 3 a second refused with a 503 for lack of room or a long wait, and a trickle stopped by the query time limit
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+150x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="503"}'
+        values: '0+46x240'
+      - series: 'cricket_api_admission_total{class="medium", outcome="refused_wait"}'
+        values: '0+30x240'
+      - series: 'cricket_api_admission_total{class="heavy", outcome="refused_room"}'
+        values: '0+15x240'
+      - series: 'cricket_api_query_timeouts_total'
+        values: '0+1x240'
+      - series: 'cricket_api_admission_total{class="medium", outcome="admitted"}'
+        values: '0+60x240'
+      - series: 'cricket_api_admission_total{class="heavy", outcome="admitted"}'
+        values: '0+20x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: Api5xxRateHigh
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: ApiAdmissionRefusalsSustained
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: The API has refused requests for lack of room for 10 minutes
+              description: Requests were refused because the admission rooms were full, the wait ran out or every query slot stayed taken. More than one every 10 seconds on average. This is overload, not a fault.
+      - eval_time: 30m
+        alertname: ApiQueryTimeoutsHigh
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: The API is stopping long queries at the time limit
+              description: At least 6 queries in 10 minutes were stopped by the query time limit, and they were more than 1 percent of the medium and heavy requests run. Provisional thresholds. Heavy leaderboards are the usual cause when the host is busy.
+
+  - name: real faults during an overload still fire the server error alert
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+150x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="503"}'
+        values: '0+45x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="500"}'
+        values: '0+4x240'
+      - series: 'cricket_api_admission_total{class="medium", outcome="refused_wait"}'
+        values: '0+45x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: Api5xxRateHigh
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: More than 1 percent of requests are unexpected server errors
+              description: Server errors other than overload refusals and query time limit stops, above 1 percent for 5 minutes, with at least about 3 requests a minute. The fault log has the request ids.
+
+  - name: a busy query slot is overload and counts with the refusals
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+150x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="503"}'
+        values: '0+30x240'
+      - series: 'cricket_api_query_busy_total'
+        values: '0+30x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: Api5xxRateHigh
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: ApiAdmissionRefusalsSustained
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: The API has refused requests for lack of room for 10 minutes
+              description: Requests were refused because the admission rooms were full, the wait ran out or every query slot stayed taken. More than one every 10 seconds on average. This is overload, not a fault.
+
+  - name: the soak's own rate of query time limit stops does not alert
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+50x240'
+      - series: 'cricket_api_query_timeouts_total'
+        values: '0+0.0105x240'
+      - series: 'cricket_api_admission_total{class="heavy", outcome="admitted"}'
+        values: '0+1x240'
+      - series: 'cricket_api_admission_total{class="medium", outcome="admitted"}'
+        values: '0+12x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ApiQueryTimeoutsHigh
+        exp_alerts: []
+
+  - name: a quiet API with a few slow queries does not alert on frequency alone
+    interval: 15s
+    input_series:
+      # 3 stops in 10 minutes (0.005 a second) out of about 12 medium and heavy requests a minute: a high share, but under the frequency floor
+      - series: 'cricket_api_query_timeouts_total'
+        values: '0+0.075x240'
+      - series: 'cricket_api_admission_total{class="heavy", outcome="admitted"}'
+        values: '0+1x240'
+      - series: 'cricket_api_admission_total{class="medium", outcome="admitted"}'
+        values: '0+2x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ApiQueryTimeoutsHigh
+        exp_alerts: []
+
+  - name: a busy API with a trickle of stops does not alert on frequency alone
+    interval: 15s
+    input_series:
+      # 0.02 stops a second is over the floor, but out of 20 medium and heavy requests a second it is 0.1 percent
+      - series: 'cricket_api_query_timeouts_total'
+        values: '0+0.3x240'
+      - series: 'cricket_api_admission_total{class="heavy", outcome="admitted"}'
+        values: '0+75x240'
+      - series: 'cricket_api_admission_total{class="medium", outcome="admitted"}'
+        values: '0+225x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ApiQueryTimeoutsHigh
+        exp_alerts: []
+
+  - name: a share of long queries stopped that is both frequent and large fires
+    interval: 15s
+    input_series:
+      # the ladder's pattern: 0.04 stops a second out of 2 medium and heavy requests a second, 2 percent
+      - series: 'cricket_api_query_timeouts_total'
+        values: '0+0.6x240'
+      - series: 'cricket_api_admission_total{class="heavy", outcome="admitted"}'
+        values: '0+6x240'
+      - series: 'cricket_api_admission_total{class="medium", outcome="admitted"}'
+        values: '0+24x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ApiQueryTimeoutsHigh
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: The API is stopping long queries at the time limit
+              description: At least 6 queries in 10 minutes were stopped by the query time limit, and they were more than 1 percent of the medium and heavy requests run. Provisional thresholds. Heavy leaderboards are the usual cause when the host is busy.
+
+  - name: handled overload counters cannot hide a 500 and a 503 nothing accounts for still counts
+    interval: 15s
+    input_series:
+      # 150 answered and 15 refused a second as 503, but the refusal counter claims 60 a second (more than the 503s): the surplus must not offset the 500s
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+150x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="503"}'
+        values: '0+15x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="500"}'
+        values: '0+4x240'
+      - series: 'cricket_api_admission_total{class="medium", outcome="refused_wait"}'
+        values: '0+60x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: Api5xxRateHigh
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: More than 1 percent of requests are unexpected server errors
+              description: Server errors other than overload refusals and query time limit stops, above 1 percent for 5 minutes, with at least about 3 requests a minute. The fault log has the request ids.
+
+  - name: a 503 that no overload counter accounts for is an unexpected error
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/v1/x", status="200"}'
+        values: '0+150x240'
+      - series: 'cricket_api_requests_total{route="/v1/x", status="503"}'
+        values: '0+15x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: Api5xxRateHigh
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: More than 1 percent of requests are unexpected server errors
+              description: Server errors other than overload refusals and query time limit stops, above 1 percent for 5 minutes, with at least about 3 requests a minute. The fault log has the request ids.
+
+  - name: the firewall is not loaded, differs from the release, or is not persisted
+    interval: 1m
+    input_series:
+      - series: 'cricket_firewall_loaded'
+        values: '1x5 0x30'
+      - series: 'cricket_firewall_matches_release'
+        values: '1x5 0x40'
+      - series: 'cricket_firewall_persisted_matches_release'
+        values: '1x5 0x40'
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: FirewallDriftsFromRelease
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: FirewallNotLoaded
+        exp_alerts: []
+      - eval_time: 20m
+        alertname: FirewallNotLoaded
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: The host firewall table is not loaded
+              description: Port 443 would be open to everyone. Run host/apply_firewall.sh for the current release.
+      - eval_time: 30m
+        alertname: FirewallDriftsFromRelease
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The loaded firewall does not hold the current release's Cloudflare ranges
+              description: It was changed by hand or the release's rules were never applied. Run host/apply_firewall.sh for the current release.
+      - eval_time: 30m
+        alertname: FirewallNotPersisted
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The firewall a reboot would load is not the current release's
+              description: /etc/nftables.d/cricket.nft differs from the release or does not exist. Run host/apply_firewall.sh for the current release.
+
+  - name: the firewall check stopped running
+    interval: 1m
+    input_series:
+      - series: 'up{job="node"}'
+        values: '1x60'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: FirewallCheckStale
+        exp_alerts: []
+      - eval_time: 45m
+        alertname: FirewallCheckStale
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: The firewall check has not run for 30 minutes
+              description: The three firewall alerts above cannot fire while it is not running.
+
+  - name: the firewall state cannot be worked out, or the check's output is missing
+    interval: 1m
+    input_series:
+      - series: 'cricket_firewall_loaded'
+        values: '1x60'
+      - series: 'cricket_firewall_matches_release'
+        values: '1x5 -1x40'
+      - series: 'cricket_firewall_persisted_matches_release'
+        values: '1x60'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: FirewallStateUnknown
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: FirewallStateUnknown
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The firewall check cannot tell whether the firewall is the current release's
+              description: A list or the firewall could not be read, or the check's output is missing. The firewall may be wrong and nothing says so. Run host/firewall_check.sh by hand.
+      - eval_time: 30m
+        alertname: FirewallDriftsFromRelease
+        exp_alerts: []
+
+  - name: the persisted firewall is missing, which is a difference and not silence
+    interval: 1m
+    input_series:
+      - series: 'cricket_firewall_loaded'
+        values: '1x60'
+      - series: 'cricket_firewall_matches_release'
+        values: '1x60'
+      - series: 'cricket_firewall_persisted_matches_release'
+        values: '1x5 0x40'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: FirewallNotPersisted
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The firewall a reboot would load is not the current release's
+              description: /etc/nftables.d/cricket.nft differs from the release or does not exist. Run host/apply_firewall.sh for the current release.
+
+  - name: no firewall metrics at all while the host is scraped
+    interval: 1m
+    input_series:
+      - series: 'up{job="node", instance="172.30.20.1:9100"}'
+        values: '1x60'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: FirewallStateUnknown
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: FirewallStateUnknown
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The firewall check cannot tell whether the firewall is the current release's
+              description: A list or the firewall could not be read, or the check's output is missing. The firewall may be wrong and nothing says so. Run host/firewall_check.sh by hand.
+      - eval_time: 30m
+        alertname: FirewallNotLoaded
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: The host firewall table is not loaded
+              description: Port 443 would be open to everyone. Run host/apply_firewall.sh for the current release.
+
+  - name: health requests do not dilute or hide business errors and latency
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/health", status="200"}'
+        values: '0+40x240'
+      - series: 'cricket_api_requests_total{route="/v1/matches", status="200"}'
+        values: '0+4x240'
+      - series: 'cricket_api_requests_total{route="/v1/matches", status="500"}'
+        values: '0+0.5x240'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: Api5xxRateHigh
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: More than 1 percent of requests are unexpected server errors
+              description: Server errors other than overload refusals and query time limit stops, above 1 percent for 5 minutes, with at least about 3 requests a minute. The fault log has the request ids.
+
+  - name: a failing health route is its own alert and 200s do not fire it
+    interval: 15s
+    input_series:
+      - series: 'cricket_api_requests_total{route="/health", status="200"}'
+        values: '0+4x240'
+      - series: 'cricket_api_requests_total{route="/health", status="503"}'
+        values: '0x60 0+1x180'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ApiHealthFailing
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: ApiHealthFailing
+        exp_alerts:
+          - exp_labels: {severity: high}
+            exp_annotations:
+              summary: The health route has been answering with errors
+              description: Probes of /health failed for 5 minutes. The business alerts do not include health requests.
+
+  - name: host memory and pressure alerts fire on sustained low memory and stalls only
+    interval: 15s
+    input_series:
+      - series: 'node_memory_MemAvailable_bytes{instance="h"}'
+        values: '2000000000x60 400000000x180'
+      - series: 'node_pressure_memory_stalled_seconds_total{instance="h"}'
+        values: '0+0.15x60 0+3x180'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: HostMemoryAvailableLow
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: HostMemoryPressure
+        exp_alerts: []
+      - eval_time: 40m
+        alertname: HostMemoryAvailableLow
+        exp_alerts:
+          - exp_labels: {severity: warning, family: host_memory, instance: h}
+            exp_annotations:
+              summary: The host has less than 600 MiB of memory available
+              description: Available memory has been under 600 MiB for 5 minutes. Look at the dashboard's per-service memory before acting. Provisional threshold, taken from the test stop line.
+      - eval_time: 40m
+        alertname: HostMemoryPressure
+        exp_alerts:
+          - exp_labels: {severity: high, family: host_memory, instance: h}
+            exp_annotations:
+              summary: Tasks on the host are stalled on memory more than 10 percent of the time
+              description: Memory pressure (full) has been above 10 percent for 5 minutes. The API, the monitoring stack and the system share this host.
+
+  - name: prometheus rule failures and a missing self scrape are alerts
+    interval: 15s
+    input_series:
+      - series: 'prometheus_rule_evaluation_failures_total{rule_group="g"}'
+        values: '0x60 0+1x180'
+      - series: 'up{job="prometheus"}'
+        values: '1x60 0x180'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: PrometheusRuleEvaluationFailing
+        exp_alerts: []
+      - eval_time: 40m
+        alertname: PrometheusRuleEvaluationFailing
+        exp_alerts:
+          - exp_labels: {severity: high, rule_group: g}
+            exp_annotations:
+              summary: Prometheus failed to evaluate alert rules
+              description: Some rules are not being evaluated, so their alerts cannot fire. Check Prometheus's logs.
+      - eval_time: 40m
+        alertname: PrometheusSelfScrapeDown
+        exp_alerts:
+          - exp_labels: {severity: high, job: prometheus}
+            exp_annotations:
+              summary: Prometheus cannot scrape itself
+              description: Prometheus's own metrics are missing, which hides its memory, rule and storage health.
+
+  - name: any OOM kill on the host fires once and the Grafana kill of 2026-10-13 would have been caught
+    interval: 15s
+    input_series:
+      - series: 'node_vmstat_oom_kill{instance="h"}'
+        values: '0x120 1x240'
+    alert_rule_test:
+      - eval_time: 25m
+        alertname: HostOomKill
+        exp_alerts: []
+      - eval_time: 31m
+        alertname: HostOomKill
+        exp_alerts:
+          - exp_labels: {severity: high, family: oom, instance: h}
+            exp_annotations:
+              summary: The kernel killed a process for lack of memory
+              description: Some process or container was OOM killed in the last 30 minutes. The kernel log names it (journalctl -k | grep -i "out of memory"). A container that restarts after a kill shows in ContainerRestarted.
+      - eval_time: 75m
+        alertname: HostOomKill
+        exp_alerts: []
+
+  - name: a restart of any service is seen as a change of its start time, a steady one is not
+    interval: 15s
+    input_series:
+      - series: 'process_start_time_seconds{job="grafana"}'
+        values: '1000x120 2000x240'
+      - series: 'process_start_time_seconds{job="alertmanager"}'
+        values: '1000x400'
+    alert_rule_test:
+      - eval_time: 25m
+        alertname: ContainerRestarted
+        exp_alerts: []
+      - eval_time: 32m
+        alertname: ContainerRestarted
+        exp_alerts:
+          - exp_labels: {severity: warning, family: restart, job: grafana}
+            exp_annotations:
+              summary: A service restarted in the last 30 minutes
+              description: "The service named by the job label has a new start time, and it is not the one planned API restart of a finished publication. Expected after a manual deploy. Otherwise look for an OOM kill (HostOomKill) or a crash."
+
+  # The planned restart: the publisher recreates the API once and its journal then says committed (the observer's metric holds the time, 630 s here). The API restarts at 600 s.
+  - name: the one planned API restart of a committed publication is not mailed
+    interval: 15s
+    input_series:
+      - series: 'process_start_time_seconds{job="cricket-api"}'
+        values: '1000x40 2000x200'
+      - series: 'up{job="cricket-api"}'
+        values: '1x240'
+      - series: 'cricket_data_refresh_publication_committed_seconds'
+        values: '630x240'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: ContainerRestarted
+        exp_alerts: []
+      - eval_time: 20m
+        alertname: ContainerRestarted
+        exp_alerts: []
+      - eval_time: 40m
+        alertname: ContainerRestarted
+        exp_alerts: []
+
+  - name: an API restart with no committed publication behind it still fires
+    interval: 15s
+    input_series:
+      - series: 'process_start_time_seconds{job="cricket-api"}'
+        values: '1000x40 2000x200'
+      - series: 'up{job="cricket-api"}'
+        values: '1x240'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: ContainerRestarted
+        exp_alerts:
+          - exp_labels: {severity: warning, family: restart, job: cricket-api}
+            exp_annotations:
+              summary: A service restarted in the last 30 minutes
+              description: "The service named by the job label has a new start time, and it is not the one planned API restart of a finished publication. Expected after a manual deploy. Otherwise look for an OOM kill (HostOomKill) or a crash."
+
+  - name: a publication that finished long ago excuses nothing
+    interval: 15s
+    input_series:
+      - series: 'process_start_time_seconds{job="cricket-api"}'
+        values: '1000x40 2000x200'
+      - series: 'up{job="cricket-api"}'
+        values: '1x240'
+      - series: 'cricket_data_refresh_publication_committed_seconds'
+        values: '-100000x240'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: ContainerRestarted
+        exp_alerts:
+          - exp_labels: {severity: warning, family: restart, job: cricket-api}
+            exp_annotations:
+              summary: A service restarted in the last 30 minutes
+              description: "The service named by the job label has a new start time, and it is not the one planned API restart of a finished publication. Expected after a manual deploy. Otherwise look for an OOM kill (HostOomKill) or a crash."
+
+  - name: a second API restart after a committed publication still fires
+    interval: 15s
+    input_series:
+      - series: 'process_start_time_seconds{job="cricket-api"}'
+        values: '1000x40 2000x40 3000x160'
+      - series: 'up{job="cricket-api"}'
+        values: '1x240'
+      - series: 'cricket_data_refresh_publication_committed_seconds'
+        values: '630x240'
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: ContainerRestarted
+        exp_alerts: []
+      - eval_time: 22m
+        alertname: ContainerRestarted
+        exp_alerts:
+          - exp_labels: {severity: warning, family: restart, job: cricket-api}
+            exp_annotations:
+              summary: A service restarted in the last 30 minutes
+              description: "The service named by the job label has a new start time, and it is not the one planned API restart of a finished publication. Expected after a manual deploy. Otherwise look for an OOM kill (HostOomKill) or a crash."
+
+  - name: an API that is not up after its restart is not excused
+    interval: 15s
+    input_series:
+      - series: 'process_start_time_seconds{job="cricket-api"}'
+        values: '1000x40 2000x200'
+      - series: 'up{job="cricket-api"}'
+        values: '1x40 0x200'
+      - series: 'cricket_data_refresh_publication_committed_seconds'
+        values: '630x240'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: ContainerRestarted
+        exp_alerts:
+          - exp_labels: {severity: warning, family: restart, job: cricket-api}
+            exp_annotations:
+              summary: A service restarted in the last 30 minutes
+              description: "The service named by the job label has a new start time, and it is not the one planned API restart of a finished publication. Expected after a manual deploy. Otherwise look for an OOM kill (HostOomKill) or a crash."
+
+  - name: another service restarting in the window of a committed publication still fires
+    interval: 15s
+    input_series:
+      - series: 'process_start_time_seconds{job="grafana"}'
+        values: '1000x40 2000x200'
+      - series: 'up{job="cricket-api"}'
+        values: '1x240'
+      - series: 'cricket_data_refresh_publication_committed_seconds'
+        values: '630x240'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: ContainerRestarted
+        exp_alerts:
+          - exp_labels: {severity: warning, family: restart, job: grafana}
+            exp_annotations:
+              summary: A service restarted in the last 30 minutes
+              description: "The service named by the job label has a new start time, and it is not the one planned API restart of a finished publication. Expected after a manual deploy. Otherwise look for an OOM kill (HostOomKill) or a crash."
+
+  - name: grafana down and grafana memory
+    interval: 15s
+    input_series:
+      - series: 'up{job="grafana"}'
+        values: '1x40 0x80'
+      - series: 'process_resident_memory_bytes{job="grafana"}'
+        values: '300000000x40 640000000x80'
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: GrafanaDown
+        exp_alerts: []
+      - eval_time: 25m
+        alertname: GrafanaDown
+        exp_alerts:
+          - exp_labels: {severity: high, job: grafana}
+            exp_annotations:
+              summary: Grafana is not answering its metrics scrape
+              description: The dashboards are unavailable. If it restarted after an OOM kill, HostOomKill says so.
+      - eval_time: 9m
+        alertname: GrafanaRssHigh
+        exp_alerts: []
+      - eval_time: 25m
+        alertname: GrafanaRssHigh
+        exp_alerts:
+          - exp_labels: {severity: warning, job: grafana}
+            exp_annotations:
+              summary: Grafana's resident memory (RSS) has been above 580 MiB for 2 minutes
+              description: This is above the highest RSS seen in normal dashboard use (556 MiB). It flags unusual growth in the process, not an approach to a kill, and it can miss a spike that lasts seconds.
+
+  - name: grafana rss in normal use and in a short spike stays quiet
+    interval: 15s
+    input_series:
+      - series: 'process_resident_memory_bytes{job="grafana"}'
+        # 333 MiB idle, 556 MiB with the dashboard open, a 620 MiB spike of 90 seconds, back to 556
+        values: '349175808x20 583008256x80 650117120x6 583008256x40'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: GrafanaRssHigh
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: GrafanaRssHigh
+        exp_alerts: []

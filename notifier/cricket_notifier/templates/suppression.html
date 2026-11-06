@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block body %}
+<div style="background:#2a2410;border:1px solid #a88a2c;border-radius:10px;padding:10px 14px;margin:0 0 10px 0;"><strong>{{ count }} alert or recovery email{{ "s" if count != 1 else "" }} {{ "were" if count != 1 else "was" }} not sent</strong> on {{ day }} (UTC) up to this notice.</div>
+{% if reason == "budget" %}<p style="margin:0;">The day's budget for alert email is spent. This is the one notice for the day, and no more alert email goes out until the day changes. Every alert is still recorded and counted, and the dashboard shows them.</p>
+{% else %}<p style="margin:0;">Alert email is held back while sending is failing. The dashboard shows them.</p>{% endif %}
+{% if shrunk %}<p style="margin:12px 0 0 0;font-size:13px;color:#a8a8a8;">Some detail was left out because the message was too long.</p>{% endif %}
+{% endblock %}

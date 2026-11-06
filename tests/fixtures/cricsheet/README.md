@@ -1,0 +1,1 @@
+Thirteen real matches from Cricsheet (wpl, ilt, mlc), kept as they were published, to test the daily refresh's incremental state against a full build. Cricsheet data is made available under the Open Data Commons Attribution License 1.0 (ODC-By): https://cricsheet.org/

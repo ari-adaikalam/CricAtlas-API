@@ -1,0 +1,1 @@
+{{ prefix }} Daily summary, {{ period.end_date }}{% if incomplete %} (incomplete data){% elif attention %} (needs attention){% endif %}

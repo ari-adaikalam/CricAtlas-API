@@ -1,0 +1,1 @@
+{{ prefix }} Email path {{ "problem" if state == "failing" else "recovered" }}

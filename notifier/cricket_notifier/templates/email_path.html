@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block body %}
+{% if state == "failing" %}
+<div style="background:#2a1214;border:1px solid #c4313a;border-radius:10px;padding:10px 14px;margin:0 0 10px 0;"><strong>Sending email is not working as it should.</strong>
+<ul style="margin:6px 0 0 0;padding-left:20px;">{% for condition in conditions %}<li>{{ condition }}</li>{% endfor %}</ul></div>
+<p style="margin:0 0 8px 0;">Failed {{ failed }}, unconfirmed {{ unconfirmed }}. Circuit breaker {{ breaker }}.{% if since %} Since {{ since }}.{% endif %}</p>
+<p style="margin:0;">Alert email is held while this lasts. This message is the one notice about it, and a failure to send it is recorded and does not raise another.</p>
+{% else %}
+<div style="background:#112519;border:1px solid #3f7d4f;border-radius:10px;padding:10px 14px;margin:0 0 10px 0;"><strong>Sending email works again.</strong>{% if duration %} It was failing for {{ duration }}.{% endif %}</div>
+<p style="margin:0;">Anything held in the meantime is sent as one digest.</p>
+{% endif %}
+{% if shrunk %}<p style="margin:12px 0 0 0;font-size:13px;color:#a8a8a8;">Some detail was left out because the message was too long.</p>{% endif %}
+{% endblock %}
